@@ -1,0 +1,13 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import ToolRuntime from '../../tools/ToolRuntime';
+import { getPublishedTools } from '../../tools/registry';
+import { region } from '../../config/site';
+export function getStaticPaths() {
+  return getPublishedTools(region).map(tool => ({ params: { slug: tool.slug }, props: { tool } }));
+}
+const { tool } = Astro.props;
+---
+<SiteLayout title={tool.copy[region].title} description={tool.copy[region].description} workspace>
+  <main id="main-content"><ToolRuntime toolId={tool.id} region={region} client:load /></main>
+</SiteLayout>

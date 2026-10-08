@@ -1,0 +1,28 @@
+---
+import * as stylex from '@stylexjs/stylex';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { siteStyles as s } from '../styles/site';
+import { region } from '../config/site';
+import { messages } from '../i18n/messages';
+import { getPublishedTools } from '../tools/registry';
+const t = messages[region];
+const tools = getPublishedTools(region);
+---
+<SiteLayout title={t.home}>
+  <main id="main-content" {...stylex.attrs(s.width, s.main)}>
+    <span {...stylex.attrs(s.badge)}>V0.1 / {t.foundation}</span>
+    <h1 {...stylex.attrs(s.title)}>{t.tagline}</h1>
+    <p {...stylex.attrs(s.intro)}>{t.intro}</p>
+    <section aria-labelledby="tools-heading" {...stylex.attrs(s.section)}>
+      <h2 id="tools-heading" {...stylex.attrs(s.sectionHeading)}>{t.tools} / {String(tools.length).padStart(2, '0')}</h2>
+      {tools.length === 0 ? <div {...stylex.attrs(s.empty)}>
+        <h3 {...stylex.attrs(s.emptyTitle)}>{t.empty}</h3>
+        <p {...stylex.attrs(s.description)}>{t.emptyDetail}</p>
+      </div> : <ul {...stylex.attrs(s.cards)}>{tools.map(tool => <li>
+        <a href={`/tools/${tool.slug}/`} {...stylex.attrs(s.card)}>
+          <h3>{tool.copy[region].title}</h3><p>{tool.copy[region].description}</p>
+        </a>
+      </li>)}</ul>}
+    </section>
+  </main>
+</SiteLayout>

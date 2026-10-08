@@ -1,0 +1,16 @@
+---
+import * as stylex from '@stylexjs/stylex';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { siteStyles as s } from '../styles/site';
+import { region } from '../config/site';
+import { messages } from '../i18n/messages';
+const t = messages[region];
+---
+<SiteLayout title="404" noindex>
+  <main id="main-content" {...stylex.attrs(s.width, s.main)}>
+    <span {...stylex.attrs(s.badge)}>404</span>
+    <h1 {...stylex.attrs(s.title)}>{t.notFound}</h1>
+    <p {...stylex.attrs(s.intro)}>{t.notFoundDetail}</p>
+    <a href="/" {...stylex.attrs(s.link)}>{t.back}</a>
+  </main>
+</SiteLayout>

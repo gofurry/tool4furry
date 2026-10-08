@@ -1,0 +1,45 @@
+@layer reset, base;
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+  }
+  [hidden] {
+    display: none !important;
+  }
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+}
+@layer base {
+  body {
+    font-family: system-ui, sans-serif;
+    color: #24352f;
+    background: #f6f7f2;
+  }
+  html {
+    line-height: 1.5;
+    color-scheme: light;
+  }
+  button {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  a {
+    color: inherit;
+  }
+  :focus-visible {
+    outline: 3px solid #19765b;
+    outline-offset: 3px;
+  }
+}

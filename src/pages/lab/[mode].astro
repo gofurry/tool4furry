@@ -1,0 +1,14 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import LabRuntime from '../../lab/LabRuntime';
+import { getLabPaths, type LabMode } from '../../lab/routes';
+import { region } from '../../config/site';
+import { messages } from '../../lab/messages';
+export function getStaticPaths() { return getLabPaths(import.meta.env.DEV); }
+interface Props { mode: LabMode }
+const { mode } = Astro.props;
+const t = messages[region];
+---
+<SiteLayout title={`${t.lab} / ${t[mode]}`} workspace noindex>
+  <main id="main-content"><LabRuntime mode={mode} region={region} client:load /></main>
+</SiteLayout>
