@@ -55,7 +55,13 @@ describe('shell contract', () => {
     await user.click(await screen.findByRole('option', { name: t.orange }));
     expect(color.textContent).toContain(t.orange);
     expect(screen.getByRole('dialog')).toBeTruthy();
+    await waitFor(() => expect(screen.queryByRole('listbox')).toBeNull());
+    await waitFor(() => expect(document.activeElement).toBe(color));
     await user.click(color);
+    // Base UI installs focus/dismissal after mounting the portal. Send Escape only once ready.
+    await waitFor(() =>
+      expect(document.activeElement).toBe(screen.getByRole('option', { name: t.orange })),
+    );
     await user.keyboard('{Escape}');
     await waitFor(() => expect(document.activeElement).toBe(color));
     expect(screen.getByRole('dialog')).toBeTruthy();
