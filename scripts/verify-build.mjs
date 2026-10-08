@@ -16,7 +16,9 @@ assert(
 );
 assert(
   !files.some((file) =>
-    /LabRuntime|WorkbenchLab|CanvasDemo|FormDemo|BatchDemo|UILab/.test(file),
+    /LabRuntime|WorkbenchLab|CanvasDemo|FormDemo|BatchDemo|UILab|FilesLab/.test(
+      file,
+    ),
   ),
   'Lab entry assets leaked into production',
 );
@@ -36,6 +38,12 @@ assert.equal(
   'Homepage must remain static',
 );
 assert(!home.includes('/lab/'), 'Lab navigation leaked into homepage');
+assert.equal(
+  document.querySelectorAll('link[rel="modulepreload"], link[as="script"]')
+    .length,
+  0,
+  'Homepage must not preload JavaScript',
+);
 if (region === 'global')
   assert(
     !/[\u4e00-\u9fff]/u.test(document.body.textContent),
@@ -79,7 +87,9 @@ for (const page of htmlFiles) {
 for (const file of files.filter((file) => file.endsWith('.js'))) {
   const js = await readFile(resolve(root, file), 'utf8');
   assert(
-    !/data-workbench|data-ui-lab|simulateText|advanceTasks|canvasAction/.test(js),
+    !/data-workbench|data-ui-lab|data-files-lab|simulateText|advanceTasks|canvasAction/.test(
+      js,
+    ),
     `Demo implementation leaked: ${file}`,
   );
 }

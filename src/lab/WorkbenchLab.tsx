@@ -9,6 +9,7 @@ import CanvasDemo from './CanvasDemo';
 import FormDemo from './FormDemo';
 import BatchDemo from './BatchDemo';
 import UILab from './UILab';
+import FilesLab from './FilesLab';
 
 export default function WorkbenchLab({
   mode,
@@ -49,6 +50,7 @@ export default function WorkbenchLab({
   if (mode === 'canvas') return <CanvasDemo t={t} header={header} />;
   if (mode === 'form') return <FormDemo t={t} header={header} />;
   if (mode === 'ui') return <UILab t={t} header={header} />;
+  if (mode === 'files') return <FilesLab t={t} header={header} />;
   return <BatchDemo t={t} header={header} />;
 }
 const s = stylex.create({

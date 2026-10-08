@@ -1,0 +1,176 @@
+import { useEffect, useId, useRef, useState, type DragEvent } from 'react';
+import { FolderOpenIcon } from '@phosphor-icons/react';
+import * as stylex from '@stylexjs/stylex';
+import { controls } from '../styles/controls';
+import { tokens } from '../styles/tokens.stylex';
+import { fieldStyles } from './Field';
+import {
+  validateFiles,
+  type FileConstraints,
+  type FileIssue,
+  type FileIssueReason,
+} from './file-constraints';
+
+export interface FileDropzoneProps extends FileConstraints {
+  id?: string;
+  label: string;
+  hint?: string;
+  disabled?: boolean;
+  issueMessages: Record<FileIssueReason, string>;
+  onFilesSelected: (files: File[]) => void;
+  onRejected?: (issues: FileIssue[]) => void;
+}
+const hasFiles = (event: DragEvent) =>
+  Array.from(event.dataTransfer.types).includes('Files') ||
+  event.dataTransfer.files.length > 0;
+
+/** Owns only interaction feedback. File ownership and queues belong to the caller. */
+export function FileDropzone({
+  id,
+  label,
+  hint,
+  disabled = false,
+  accept,
+  multiple = false,
+  maxFiles,
+  maxSizeBytes,
+  issueMessages,
+  onFilesSelected,
+  onRejected,
+}: FileDropzoneProps) {
+  const generatedId = useId();
+  const inputId = id ?? generatedId;
+  const input = useRef<HTMLInputElement>(null);
+  const dragDepth = useRef(0);
+  const [dragging, setDragging] = useState(false);
+  const [issues, setIssues] = useState<FileIssue[]>([]);
+  const describedBy =
+    [hint && `${inputId}-hint`, issues.length > 0 && `${inputId}-issues`]
+      .filter(Boolean)
+      .join(' ') || undefined;
+  const resetDrag = () => {
+    dragDepth.current = 0;
+    setDragging(false);
+  };
+  useEffect(resetDrag, [disabled]);
+  const receive = (files: File[]) => {
+    if (disabled || files.length === 0) return;
+    const result = validateFiles(files, {
+      accept,
+      multiple,
+      maxFiles,
+      maxSizeBytes,
+    });
+    setIssues(result.rejected);
+    if (result.accepted.length) onFilesSelected(result.accepted);
+    if (result.rejected.length) onRejected?.(result.rejected);
+  };
+  return (
+    <div {...stylex.props(controls.field)}>
+      <input
+        ref={input}
+        id={inputId}
+        type="file"
+        hidden
+        accept={accept}
+        multiple={multiple}
+        disabled={disabled}
+        aria-label={label}
+        aria-describedby={describedBy}
+        aria-invalid={issues.length > 0 || undefined}
+        onChange={(event) => {
+          const target = event.currentTarget;
+          try {
+            receive(Array.from(target.files ?? []));
+          } finally {
+            target.value = '';
+          }
+        }}
+      />
+      <button
+        type="button"
+        disabled={disabled}
+        aria-label={label}
+        aria-describedby={describedBy}
+        aria-invalid={issues.length > 0 || undefined}
+        data-dragging={dragging && !disabled ? '' : undefined}
+        {...stylex.props(
+          controls.button,
+          styles.zone,
+          dragging && !disabled && styles.dragging,
+          issues.length > 0 && controls.invalid,
+        )}
+        onClick={() => input.current?.click()}
+        onDragEnter={(event) => {
+          if (!hasFiles(event)) return;
+          event.preventDefault();
+          event.stopPropagation();
+          if (!disabled) {
+            dragDepth.current += 1;
+            setDragging(true);
+          }
+        }}
+        onDragLeave={() => {
+          dragDepth.current = Math.max(0, dragDepth.current - 1);
+          if (dragDepth.current === 0) setDragging(false);
+        }}
+        onDragOver={(event) => {
+          if (!hasFiles(event)) return;
+          event.preventDefault();
+          event.stopPropagation();
+          event.dataTransfer.dropEffect = disabled ? 'none' : 'copy';
+        }}
+        onDrop={(event) => {
+          if (!hasFiles(event)) return;
+          event.preventDefault();
+          event.stopPropagation();
+          resetDrag();
+          receive(Array.from(event.dataTransfer.files));
+        }}
+      >
+        <FolderOpenIcon size={28} aria-hidden="true" />
+        <span {...stylex.props(styles.label)}>{label}</span>
+        {hint && (
+          <span id={`${inputId}-hint`} {...stylex.props(controls.muted)}>
+            {hint}
+          </span>
+        )}
+      </button>
+      {issues.length > 0 && (
+        <ul
+          id={`${inputId}-issues`}
+          role="alert"
+          {...stylex.props(styles.issues, fieldStyles.error)}
+        >
+          {issues.map((issue, index) => (
+            <li key={index}>
+              {issue.name}: {issueMessages[issue.reason]}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+const styles = stylex.create({
+  zone: {
+    flexDirection: 'column',
+    width: '100%',
+    minHeight: 156,
+    padding: 24,
+    borderStyle: 'dashed',
+    textAlign: 'center',
+    overflowWrap: 'anywhere',
+    opacity: { default: 1, ':disabled': 0.5 },
+  },
+  dragging: {
+    backgroundColor: tokens.soft,
+    borderColor: tokens.accent,
+    outlineStyle: 'solid',
+    outlineWidth: 2,
+    outlineColor: tokens.focus,
+    outlineOffset: 3,
+  },
+  label: { fontWeight: 650, maxWidth: '100%' },
+  issues: { paddingInlineStart: 24 },
+});

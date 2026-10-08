@@ -1,6 +1,46 @@
 import type { Region } from '../config/region';
 
 const cn = {
+  files: '文件与滚动',
+  filesIntro:
+    '开发演示：文件仅保留在浏览器内。本页只展示名称、大小和类型，不读取文件内容、不生成预览、不上传或保存文件。',
+  fileChoose: '选择文件，或拖放到这里',
+  fileHint:
+    'PNG / JPEG / WebP；每次最多 3 个，单文件不超过 2 MiB。重复选择同一文件会新增一条记录。',
+  fileTypeIssue: '类型不符，请选择 PNG、JPEG 或 WebP 文件。',
+  fileSizeIssue: '超过单文件 2 MiB 上限。',
+  fileCountIssue: '超出本次可接受的文件数量。',
+  fileDisable: '禁用文件选择与拖放',
+  fileMultiple: '允许每次选择多个文件（关闭后最多 1 个）',
+  fileList: '浏览器内的文件记录',
+  fileEmpty: '尚未选择文件。',
+  fileName: '名称',
+  fileSize: '大小',
+  fileType: '类型',
+  fileUnknownType: '未提供 MIME 类型',
+  fileSelected: '文件已选择，仅保留在浏览器内',
+  fileRejected: '部分文件未接收，请查看选择区下方的原因',
+  fileClear: '清空文件记录',
+  fileClearTitle: '清空本页的文件记录？',
+  fileClearDescription: '仅释放本页持有的文件引用，不会删除设备上的原文件。',
+  fileCount: '当前记录数',
+  fileRounds: '已接收批次数',
+  scrollTitle: '页面滚动体验',
+  scrollIntro:
+    '向下滚动检查右下角进度球。宽度至少 900px 且使用精确指针时，长页面开始滚动后才显示；点击每次向上移动总可滚动距离的 25%。',
+  scrollStep: '向上滚动，当前进度 {progress}%',
+  fileGuideTitle: '检查文件边界',
+  fileGuide:
+    '混合选择合法文件与不支持的类型：合法项会进入列表，其他项分别列出原因。文件名、MIME 与扩展名只用于本地提示，不证明内容真实或安全。',
+  fileCountGuideTitle: '检查数量与重复选择',
+  fileCountGuide:
+    '先选 3 个小文件，再选第 4 个：上限针对每次操作，不是累计列表。一次选 4 个时多出的合法项会被拒绝。重复选同一个文件应产生新记录；可逐条移除或清空。',
+  fileScrollGuideTitle: '检查原生滚动',
+  fileScrollGuide:
+    '手机和触摸设备继续使用原生滚动。滚动球不改变鼠标滚轮、键盘或触摸行为，也不会控制 Canvas、参数抽屉或其他内部面板。',
+  filePrivacyGuideTitle: '检查本地边界',
+  filePrivacyGuide:
+    '这些记录只存在于本页内存，刷新或离开会清空。此 Demo 没有图片解码、文件字节读取、对象 URL、上传、持久存储或真实工具算法。',
   ui: '基础控件',
   uiIntro:
     '基础控件预览 · 所有更改仅保留在当前页面。用 Tab、方向键、空格和 Escape 检查交互。',
@@ -94,6 +134,48 @@ const cn = {
 };
 export type LabMessages = { [K in keyof typeof cn]: string };
 const global: LabMessages = {
+  files: 'Files and scroll',
+  filesIntro:
+    'Development demo: files stay in your browser. This page shows names, sizes and types only. It does not read contents, create previews, upload or persist files.',
+  fileChoose: 'Choose files, or drop them here',
+  fileHint:
+    'PNG / JPEG / WebP; up to 3 per selection, at most 2 MiB each. Selecting the same file again adds another record.',
+  fileTypeIssue: 'Unsupported type. Choose a PNG, JPEG or WebP file.',
+  fileSizeIssue: 'Exceeds the 2 MiB per-file limit.',
+  fileCountIssue: 'Exceeds the number allowed in this selection.',
+  fileDisable: 'Disable file selection and dropping',
+  fileMultiple: 'Allow multiple files per selection (off: at most 1)',
+  fileList: 'File records in this browser',
+  fileEmpty: 'No files selected yet.',
+  fileName: 'Name',
+  fileSize: 'Size',
+  fileType: 'Type',
+  fileUnknownType: 'MIME type not provided',
+  fileSelected: 'Files selected; kept in your browser only',
+  fileRejected:
+    'Some files were not accepted. Read the reasons below the selection area.',
+  fileClear: 'Clear file records',
+  fileClearTitle: 'Clear the records on this page?',
+  fileClearDescription:
+    'This releases this page’s file references. It does not delete the original files on your device.',
+  fileCount: 'Current records',
+  fileRounds: 'Accepted selections',
+  scrollTitle: 'Page scrolling demo',
+  scrollIntro:
+    'Scroll down to find the progress orb at the bottom right. It appears on long pages at least 900px wide with a fine pointer. Each click moves up by 25% of the total scrollable distance.',
+  scrollStep: 'Scroll up, current progress {progress}%',
+  fileGuideTitle: 'Check file constraints',
+  fileGuide:
+    'Mix supported files with unsupported types: valid files appear in the list and rejected files each have a reason. Names, MIME types and extensions are local hints, not proof of genuine or safe content.',
+  fileCountGuideTitle: 'Check counts and repeat selection',
+  fileCountGuide:
+    'Choose 3 small files, then a fourth: the limit is per selection, not per list. Choosing 4 at once rejects the extra valid file. Choosing the same file again adds a record. Remove one or clear them all.',
+  fileScrollGuideTitle: 'Check native scrolling',
+  fileScrollGuide:
+    'Phones and touch devices keep native scrolling. The orb does not change wheel, keyboard or touch behavior. It never controls Canvas, parameter sheets or other internal panels.',
+  filePrivacyGuideTitle: 'Check the local boundary',
+  filePrivacyGuide:
+    'Records live in this page’s memory and disappear when you reload or leave. This demo has no image decoding, byte reading, object URLs, uploads, persistent storage or real tool algorithms.',
   ui: 'UI primitives',
   uiIntro:
     'Primitive preview · Changes stay on this page. Try Tab, arrow keys, Space and Escape.',

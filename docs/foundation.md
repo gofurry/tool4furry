@@ -17,7 +17,9 @@ Form 是输入/设置/执行与输出的双栏自然流；窄屏单栏。Batch �
 
 V0.2-A 新增 `src/ui/` 公共原语与 `/lab/ui` 画廊。状态继续由 Lab/工具持有；UiProvider 仅位于固定 LabRuntime / ToolRuntime React 根。组件 API、弹层层级和本轮验证记录见 [UI 原语说明](ui-primitives.md)。
 
-- `src/pages/lab/[mode].astro` 的 getStaticPaths：dev 返回 canvas/form/batch/ui，build 返回空列表。没有下划线目录，也不生成“加了 noindex 的生产 Lab”。
+V0.2-B 新增 `/lab/files`、FileDropzone 和仅在此长页挂载的 ScrollDock；文件列表由 FilesLab 持有，Shell 与 Provider 边界不变。API、校验策略及检查记录见 [文件交互说明](file-interactions.md)。
+
+- `src/pages/lab/[mode].astro` 的 getStaticPaths：dev 返回 canvas/form/batch/ui/files，build 返回空列表。没有下划线目录，也不生成“加了 noindex 的生产 Lab”。
 - LabRuntime 的 demo import 受 `import.meta.env.DEV` 保护；Lab 文案与正式文案分离。
 - Astro 7 会扫描零路径页面的 hydration 入口，仍可能输出一个无用的 LabRuntime chunk。因此配置中有一个只在客户端 build 阶段运行的极小 Vite options hook，移除该入口。产物检查同时禁止 Lab 页面、Lab 命名资产和 demo 实现。
 - `/tools/[slug]` 只从 `getPublishedTools(region)` 生成。当前 registry 为空，两地区均只生成首页与 404，没有假工具页，也没有 sitemap。

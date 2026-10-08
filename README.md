@@ -1,6 +1,6 @@
 # Tool4Furry
 
-为兽圈创作与日常需求准备的开源浏览器工具站。当前为 **V0.2-A — UI Primitives Foundation**：极简静态首页、三种开发工作台原型与基础控件画廊，尚无正式发布的工具。
+为兽圈创作与日常需求准备的开源浏览器工具站。当前为 **V0.2-B — File Interactions & ScrollDock**：极简静态首页、三种开发工作台原型、基础控件及文件交互预览，尚无正式发布的工具。
 
 前端及未来浏览器本地工具使用现有 [BSD-3-Clause](LICENSE) 协议。当前没有后端；未来 SaaS 后端将放在独立仓库。
 
@@ -24,9 +24,10 @@ pnpm dev
 | `/lab/form` | 输入、参数、校验、模拟输出 |
 | `/lab/batch` | 增删示例任务、推进模拟状态、清空 |
 | `/lab/ui` | 基础控件、受控值、校验、Tooltip、确认弹窗和四类 Toast |
+| `/lab/files` | 本地文件选择/拖放、元信息、部分接受与拒绝原因、长页面滚动进度球 |
 | `/404` | 404 页面预览 |
 
-**Lab 只在 dev 可访问。** 页面明确标为 Demo，不读取或处理真实文件；生产无 Lab 页面、入口或 demo 实现。首页不加载 React 工作台。
+**Lab 只在 dev 可访问。** 页面明确标为 Demo；文件页仅持有本地文件引用并展示元信息，不读取内容、生成对象 URL、上传或持久存储。生产无 Lab 页面、入口或 demo 实现，首页保持零脚本、零 Astro Island。
 
 ## 检查与构建
 
@@ -80,12 +81,15 @@ tests/            Vitest 逻辑与组件契约
 scripts/          静态产物验收
 docs/foundation.md 架构边界、Gate 与人工验收记录
 docs/ui-primitives.md 控件 API、弹层规则和 V0.2-A 验收
+docs/file-interactions.md 文件/滚动 API、边界和 V0.2-B 验收
 ```
 
 技术栈：Astro SSG、React、TypeScript、StyleX、Motion、Base UI、Phosphor Icons、pnpm、Vitest。没有 SSR Adapter、全局业务 Store、通用画布引擎、数据库、Docker、Monorepo、Storybook 或 Playwright 测试框架。`pnpm-workspace.yaml` 仅保存 pnpm 安装策略，不定义子项目。
 
 GitHub Actions 对 dev/main 的 push 与 PR 执行安装、检查、测试及双地区构建。**仅 CI，无 CD、部署 Secret 或生产发布。** 未来静态部署目标为 Cloudflare Workers Static Assets 与 EdgeOne Makers，本批次未部署。
 
-新增工具前请阅读 [架构说明](docs/foundation.md) 和 [UI 原语契约](docs/ui-primitives.md)。
+新增工具前请阅读 [架构说明](docs/foundation.md)、[UI 原语契约](docs/ui-primitives.md) 和 [文件交互契约](docs/file-interactions.md)。
 
 在 `/lab/ui` 用 Tab 聚焦、方向键切换 Select/Slider、空格切换 Checkbox、Escape 关闭弹层。清空名称并验证可查看错误；取消确认框不增加计数，确认才增加。连续触发消息至多显示三条；悬停/聚焦会暂停计时。手机参数抽屉中的嵌套 Select 可在 `/lab/canvas` 检查。
+
+在 `/lab/files` 选择或拖入 PNG/JPEG/WebP，每次最多 3 个、单文件最多 2 MiB。混入错误类型、超大或第 4 个文件，检查合法部分进入列表、拒绝原因留在选择区；重复选择同一文件应新增记录。Tab → Enter/Space 打开系统选择器；可禁用、移除或确认清空。宽度至少 900px 且精确指针下滚动长页，右下球显示进度，点击向上移动总可滚动距离的 25%；手机继续原生滚动。详细步骤及未完成的真机检查见文件交互文档。

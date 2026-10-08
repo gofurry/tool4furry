@@ -18,6 +18,7 @@ export const tokens = stylex.defineVars({
   overlay: '#14261c88',
   shadow: '0 8px 28px #14261c26',
   radius: '8px',
+  layerDock: '10',
   layerToast: '15',
   layerBackdrop: '20',
   layerSheet: '30',
