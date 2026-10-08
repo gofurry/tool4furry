@@ -16,7 +16,7 @@ assert(
 );
 assert(
   !files.some((file) =>
-    /LabRuntime|WorkbenchLab|CanvasDemo|FormDemo|BatchDemo/.test(file),
+    /LabRuntime|WorkbenchLab|CanvasDemo|FormDemo|BatchDemo|UILab/.test(file),
   ),
   'Lab entry assets leaked into production',
 );
@@ -79,7 +79,7 @@ for (const page of htmlFiles) {
 for (const file of files.filter((file) => file.endsWith('.js'))) {
   const js = await readFile(resolve(root, file), 'utf8');
   assert(
-    !/data-workbench|simulateText|advanceTasks|canvasAction/.test(js),
+    !/data-workbench|data-ui-lab|simulateText|advanceTasks|canvasAction/.test(js),
     `Demo implementation leaked: ${file}`,
   );
 }

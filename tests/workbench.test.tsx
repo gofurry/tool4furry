@@ -46,9 +46,19 @@ describe('shell contract', () => {
     await user.click(screen.getByRole('button', { name: t.showParameters }));
     expect(screen.getByRole('dialog')).toBeTruthy();
     expect(screen.getByRole('textbox', { name: t.label })).toBe(name);
+    // Base UI adds a hidden Select input; still require exactly one parameter textbox DOM node.
     expect(
-      container.querySelectorAll('input:not([type="range"])'),
+      container.querySelectorAll('input:not([type="range"]):not([aria-hidden="true"])'),
     ).toHaveLength(1);
+    const color = screen.getByRole('combobox', { name: t.accent });
+    await user.click(color);
+    await user.click(await screen.findByRole('option', { name: t.orange }));
+    expect(color.textContent).toContain(t.orange);
+    expect(screen.getByRole('dialog')).toBeTruthy();
+    await user.click(color);
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(document.activeElement).toBe(color));
+    expect(screen.getByRole('dialog')).toBeTruthy();
     await user.keyboard('{Escape}');
     await waitFor(() =>
       expect(document.activeElement?.textContent).toBe(t.showParameters),
@@ -59,6 +69,7 @@ describe('shell contract', () => {
         .value,
     ).toBe('kept');
     expect(screen.getByRole('status').textContent).toContain('1');
+    expect(screen.getByRole('combobox').textContent).toContain(t.orange);
   });
 });
 describe('observable demos', () => {
@@ -77,7 +88,8 @@ describe('observable demos', () => {
   it('adds, advances, removes and clears demo tasks', async () => {
     const user = userEvent.setup();
     render(<BatchDemo t={t} header={null} />);
-    await user.selectOptions(screen.getByRole('combobox'), 'WEBP');
+    await user.click(screen.getByRole('combobox'));
+    await user.click(await screen.findByRole('option', { name: 'WEBP' }));
     await user.click(screen.getByRole('button', { name: t.add }));
     expect(screen.getByText('Demo 02 · WEBP')).toBeTruthy();
     await user.click(screen.getByRole('button', { name: t.advance }));

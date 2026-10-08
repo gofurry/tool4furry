@@ -42,11 +42,12 @@ describe('published route boundary', () => {
     for (const tool of tools.filter((tool) => tool.status === 'published'))
       expect(toolLoaders[tool.id]).toBeTypeOf('function');
   });
-  it('registers the three lab URLs in dev only', () => {
+  it('registers all four lab URLs in dev only', () => {
     expect(getLabPaths(true).map((path) => path.params.mode)).toEqual([
       'canvas',
       'form',
       'batch',
+      'ui',
     ]);
     expect(getLabPaths(false)).toEqual([]);
   });

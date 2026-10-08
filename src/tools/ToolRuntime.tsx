@@ -2,6 +2,7 @@ import { Component, lazy, Suspense, useMemo, type ReactNode } from 'react';
 import type { Region } from '../config/region';
 import { messages } from '../i18n/messages';
 import { toolLoaders } from './loaders';
+import { UiProvider } from '../ui/UiProvider';
 class LoadBoundary extends Component<
   { children: ReactNode; fallback: ReactNode },
   { failed: boolean }
@@ -28,10 +29,12 @@ export default function ToolRuntime({
   }, [toolId]);
   const fallback = <p role="alert">{t.unavailable}</p>;
   return (
-    <LoadBoundary key={toolId} fallback={fallback}>
-      <Suspense fallback={<p role="status">{t.loading}</p>}>
-        {Tool ? <Tool region={region} /> : fallback}
-      </Suspense>
-    </LoadBoundary>
+    <UiProvider labels={t}>
+      <LoadBoundary key={toolId} fallback={fallback}>
+        <Suspense fallback={<p role="status">{t.loading}</p>}>
+          {Tool ? <Tool region={region} /> : fallback}
+        </Suspense>
+      </LoadBoundary>
+    </UiProvider>
   );
 }

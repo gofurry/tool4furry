@@ -1,6 +1,6 @@
 # Tool4Furry
 
-为兽圈创作与日常需求准备的开源浏览器工具站。当前为 **Foundation V0.1**：极简静态首页与三种开发工作台原型，尚无正式发布的工具。
+为兽圈创作与日常需求准备的开源浏览器工具站。当前为 **V0.2-A — UI Primitives Foundation**：极简静态首页、三种开发工作台原型与基础控件画廊，尚无正式发布的工具。
 
 前端及未来浏览器本地工具使用现有 [BSD-3-Clause](LICENSE) 协议。当前没有后端；未来 SaaS 后端将放在独立仓库。
 
@@ -23,6 +23,7 @@ pnpm dev
 | `/lab/canvas` | 模式切换、属性设置、模拟标记、手机参数抽屉 |
 | `/lab/form` | 输入、参数、校验、模拟输出 |
 | `/lab/batch` | 增删示例任务、推进模拟状态、清空 |
+| `/lab/ui` | 基础控件、受控值、校验、Tooltip、确认弹窗和四类 Toast |
 | `/404` | 404 页面预览 |
 
 **Lab 只在 dev 可访问。** 页面明确标为 Demo，不读取或处理真实文件；生产无 Lab 页面、入口或 demo 实现。首页不加载 React 工作台。
@@ -69,6 +70,7 @@ src/
   pages/          Astro 首页、404、lab/[mode]、tools/[slug]
   layouts/        SiteLayout：品牌、语言、SEO、页面外壳
   workbench/      可选插槽、响应式、面板开关
+  ui/             受控 UI 原语、Island 内的 UiProvider
   lab/            开发 demo、独立状态与纯模拟逻辑
   tools/          元数据、发布过滤、懒加载表、固定 ToolRuntime
   config/         地区及构建文案选择
@@ -77,10 +79,13 @@ src/
 tests/            Vitest 逻辑与组件契约
 scripts/          静态产物验收
 docs/foundation.md 架构边界、Gate 与人工验收记录
+docs/ui-primitives.md 控件 API、弹层规则和 V0.2-A 验收
 ```
 
 技术栈：Astro SSG、React、TypeScript、StyleX、Motion、Base UI、Phosphor Icons、pnpm、Vitest。没有 SSR Adapter、全局业务 Store、通用画布引擎、数据库、Docker、Monorepo、Storybook 或 Playwright 测试框架。`pnpm-workspace.yaml` 仅保存 pnpm 安装策略，不定义子项目。
 
 GitHub Actions 对 dev/main 的 push 与 PR 执行安装、检查、测试及双地区构建。**仅 CI，无 CD、部署 Secret 或生产发布。** 未来静态部署目标为 Cloudflare Workers Static Assets 与 EdgeOne Makers，本批次未部署。
 
-新增工具前请阅读 [架构说明](docs/foundation.md)。
+新增工具前请阅读 [架构说明](docs/foundation.md) 和 [UI 原语契约](docs/ui-primitives.md)。
+
+在 `/lab/ui` 用 Tab 聚焦、方向键切换 Select/Slider、空格切换 Checkbox、Escape 关闭弹层。清空名称并验证可查看错误；取消确认框不增加计数，确认才增加。连续触发消息至多显示三条；悬停/聚焦会暂停计时。手机参数抽屉中的嵌套 Select 可在 `/lab/canvas` 检查。

@@ -268,7 +268,7 @@ const s = stylex.create({
     position: { default: 'relative', '@media (max-width: 900px)': 'fixed' },
     bottom: { default: null, '@media (max-width: 900px)': 0 },
     left: { default: null, '@media (max-width: 900px)': 0 },
-    zIndex: { default: null, '@media (max-width: 900px)': 30 },
+    zIndex: { default: null, '@media (max-width: 900px)': tokens.layerSheet },
     borderRadius: { default: 0, '@media (max-width: 900px)': '16px 16px 0 0' },
   },
   closedPanel: { display: 'none' },
@@ -282,8 +282,8 @@ const s = stylex.create({
   backdrop: {
     position: 'fixed',
     inset: 0,
-    backgroundColor: '#14261c88',
-    zIndex: 20,
+    backgroundColor: tokens.overlay,
+    zIndex: tokens.layerBackdrop,
   },
   flowRight: { minWidth: 0, flex: '1 1 300px' },
   bottom: {

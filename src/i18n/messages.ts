@@ -1,6 +1,12 @@
 import type { Region } from '../config/region';
 
 const cn = {
+  notifications: '通知',
+  dismissToast: '关闭通知',
+  toastSuccess: '成功',
+  toastInfo: '提示',
+  toastWarning: '注意',
+  toastError: '错误',
   home: '首页',
   source: '源代码',
   skip: '跳到主要内容',
@@ -21,6 +27,12 @@ const cn = {
 };
 export type Messages = { [K in keyof typeof cn]: string };
 const global: Messages = {
+  notifications: 'Notifications',
+  dismissToast: 'Dismiss notification',
+  toastSuccess: 'Success',
+  toastInfo: 'Info',
+  toastWarning: 'Warning',
+  toastError: 'Error',
   home: 'Home',
   source: 'Source code',
   skip: 'Skip to content',

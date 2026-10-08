@@ -1,10 +1,11 @@
 # Tool4Furry
 
-Foundation V0.1: a static site shell and three development workbench demos.
+V0.2-A: a static site shell, three workbench demos and a development UI gallery.
 
 - Read [docs/foundation.md](docs/foundation.md) for boundaries and verified integration decisions.
 - `src/pages` + `src/layouts`: Astro SSG, site copy and published routes.
 - `src/workbench`: optional slots, responsive layout and panel visibility only.
+- `src/ui`: controlled primitives; read [docs/ui-primitives.md](docs/ui-primitives.md). Providers belong in fixed Lab/Tool React roots, never the static SiteLayout.
 - `src/tools/registry.ts`: metadata only; `loaders.ts`: separate lazy implementations.
 - `src/lab`: development demos; never register them as published tools.
 - `src/config/region.ts`: region/domain contract; `src/i18n/messages.ts`: CN/English copy.

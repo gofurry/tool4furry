@@ -5,6 +5,9 @@ import WorkbenchShell from '../workbench/WorkbenchShell';
 import type { LabMessages as Messages } from './messages';
 import { controls as c } from '../styles/controls';
 import { simulateText } from './demo-logic';
+import { Button } from '../ui/Button';
+import { TextField, TextAreaField } from '../ui/TextField';
+import { CheckboxField } from '../ui/CheckboxField';
 export default function FormDemo({
   t,
   header,
@@ -42,54 +45,37 @@ export default function FormDemo({
         }}
       >
         <h2 {...stylex.props(c.heading)}>{t.input}</h2>
-        <label {...stylex.props(c.field)}>
-          {t.input}
-          <textarea
-            rows={5}
-            maxLength={2000}
-            value={text}
-            aria-invalid={error}
-            aria-describedby={error ? 'form-error' : undefined}
-            onChange={(event) => {
-              setText(event.target.value);
-              setError(false);
-            }}
-            {...stylex.props(c.input, s.textarea)}
-          />
-        </label>
-        <label {...stylex.props(c.field)}>
-          {t.prefix}
-          <input
-            maxLength={40}
-            value={prefix}
-            onChange={(event) => setPrefix(event.target.value)}
-            {...stylex.props(c.input)}
-          />
-        </label>
-        <label {...stylex.props(c.row, s.checkbox)}>
-          <input
-            type="checkbox"
-            checked={uppercase}
-            onChange={(event) => setUppercase(event.target.checked)}
-          />
-          {t.uppercase}
-        </label>
-        {error && (
-          <p id="form-error" role="alert">
-            {t.required}
-          </p>
-        )}
-        <button type="submit" {...stylex.props(c.button, c.primary)}>
+        <TextAreaField
+          label={t.input}
+          rows={5}
+          maxLength={2000}
+          value={text}
+          error={error ? t.required : undefined}
+          onChange={(value) => {
+            setText(value);
+            setError(false);
+          }}
+        />
+        <TextField
+          label={t.prefix}
+          maxLength={40}
+          value={prefix}
+          onChange={setPrefix}
+        />
+        <CheckboxField
+          label={t.uppercase}
+          checked={uppercase}
+          onCheckedChange={setUppercase}
+        />
+        <Button type="submit" variant="primary">
           {t.run}
           <ArrowRightIcon size={18} aria-hidden />
-        </button>
+        </Button>
         <p {...stylex.props(c.muted)}>{t.formNote}</p>
       </form>
     </WorkbenchShell>
   );
 }
 const s = stylex.create({
-  textarea: { resize: 'vertical' },
-  checkbox: { minHeight: 44 },
   output: { whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', minHeight: 160 },
 });

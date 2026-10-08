@@ -10,6 +10,10 @@ import WorkbenchShell from '../workbench/WorkbenchShell';
 import type { LabMessages as Messages } from './messages';
 import { controls as c } from '../styles/controls';
 import { tokens } from '../styles/tokens.stylex';
+import { Button } from '../ui/Button';
+import { TextField } from '../ui/TextField';
+import { SelectField } from '../ui/SelectField';
+import { SliderField } from '../ui/SliderField';
 
 export default function CanvasDemo({
   t,
@@ -40,59 +44,51 @@ export default function CanvasDemo({
       header={header}
       left={
         <div {...stylex.props(s.toolbar)}>
-          <button
+          <Button
             type="button"
             aria-pressed={action === 'select'}
-            {...stylex.props(c.button, action === 'select' && c.active)}
+            variant={action === 'select' ? 'primary' : 'secondary'}
             onClick={() => setAction('select')}
           >
             <CursorIcon size={20} aria-hidden />
             {t.select}
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
             aria-pressed={action === 'stamp'}
-            {...stylex.props(c.button, action === 'stamp' && c.active)}
+            variant={action === 'stamp' ? 'primary' : 'secondary'}
             onClick={() => setAction('stamp')}
           >
             <StarIcon size={20} aria-hidden />
             {t.stamp}
-          </button>
+          </Button>
         </div>
       }
       right={
         <div {...stylex.props(c.stack)}>
-          <label {...stylex.props(c.field)}>
-            {t.label}
-            <input
-              maxLength={80}
-              {...stylex.props(c.input)}
-              value={label}
-              onChange={(event) => setLabel(event.target.value)}
-            />
-          </label>
-          <label {...stylex.props(c.field)}>
-            {t.size}: {size}px
-            <input
-              type="range"
-              min="24"
-              max="96"
-              value={size}
-              onChange={(event) => setSize(Number(event.target.value))}
-              {...stylex.props(s.range)}
-            />
-          </label>
-          <label {...stylex.props(c.field)}>
-            {t.accent}
-            <select
-              {...stylex.props(c.input)}
-              value={accent}
-              onChange={(event) => setAccent(event.target.value)}
-            >
-              <option value="green">{t.green}</option>
-              <option value="orange">{t.orange}</option>
-            </select>
-          </label>
+          <TextField
+            label={t.label}
+            maxLength={80}
+            value={label}
+            onChange={setLabel}
+          />
+          <SliderField
+            label={t.size}
+            min={24}
+            max={96}
+            value={size}
+            unit="px"
+            onValueChange={setSize}
+          />
+          <SelectField
+            label={t.accent}
+            value={accent}
+            onValueChange={setAccent}
+            options={[
+              { value: 'green', label: t.green },
+              { value: 'orange', label: t.orange },
+            ]}
+          />
           <p {...stylex.props(c.muted)}>{t.canvasHint}</p>
         </div>
       }
@@ -102,10 +98,10 @@ export default function CanvasDemo({
             {t.marks}: {marks}
             {selected ? ` · ${t.selected}` : ''}
           </span>
-          <button type="button" {...stylex.props(c.button)} onClick={reset}>
+          <Button onClick={reset}>
             <ArrowCounterClockwiseIcon size={18} aria-hidden />
             {t.reset}
-          </button>
+          </Button>
         </>
       }
     >
@@ -150,7 +146,6 @@ const s = stylex.create({
     justifyContent: 'center',
     gap: 8,
   },
-  range: { width: '100%', minHeight: 44, accentColor: tokens.accent },
   stage: {
     display: 'flex',
     flexDirection: 'column',

@@ -1,5 +1,5 @@
 import type { Region } from '../config/region';
-import type { LabMode } from './routes';
+import { labModes, type LabMode } from './routes';
 import { messages } from './messages';
 import * as stylex from '@stylexjs/stylex';
 import { ArrowLeftIcon } from '@phosphor-icons/react';
@@ -8,6 +8,7 @@ import { tokens } from '../styles/tokens.stylex';
 import CanvasDemo from './CanvasDemo';
 import FormDemo from './FormDemo';
 import BatchDemo from './BatchDemo';
+import UILab from './UILab';
 
 export default function WorkbenchLab({
   mode,
@@ -28,7 +29,7 @@ export default function WorkbenchLab({
           {t.lab} / {t[mode]}
         </h1>
         <nav aria-label={t.lab} {...stylex.props(c.row)}>
-          {(['canvas', 'form', 'batch'] as const).map((item) => (
+          {labModes.map((item) => (
             <a
               key={item}
               href={`/lab/${item}`}
@@ -47,6 +48,7 @@ export default function WorkbenchLab({
   );
   if (mode === 'canvas') return <CanvasDemo t={t} header={header} />;
   if (mode === 'form') return <FormDemo t={t} header={header} />;
+  if (mode === 'ui') return <UILab t={t} header={header} />;
   return <BatchDemo t={t} header={header} />;
 }
 const s = stylex.create({

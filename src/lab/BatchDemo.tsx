@@ -6,6 +6,8 @@ import type { LabMessages as Messages } from './messages';
 import { controls as c } from '../styles/controls';
 import { tokens } from '../styles/tokens.stylex';
 import { advanceTasks, type DemoTask } from './demo-logic';
+import { Button, IconButton } from '../ui/Button';
+import { SelectField } from '../ui/SelectField';
 export default function BatchDemo({
   t,
   header,
@@ -27,17 +29,15 @@ export default function BatchDemo({
       right={
         <section {...stylex.props(c.card, c.stack)}>
           <h2 {...stylex.props(c.heading)}>{t.parameters}</h2>
-          <label {...stylex.props(c.field)}>
-            {t.batchSetting}
-            <select
-              value={format}
-              onChange={(event) => setFormat(event.target.value)}
-              {...stylex.props(c.input)}
-            >
-              <option>PNG</option>
-              <option>WEBP</option>
-            </select>
-          </label>
+          <SelectField
+            label={t.batchSetting}
+            value={format}
+            onValueChange={setFormat}
+            options={[
+              { value: 'PNG', label: 'PNG' },
+              { value: 'WEBP', label: 'WEBP' },
+            ]}
+          />
           <p {...stylex.props(c.muted)}>{t.batchNote}</p>
           <p role="status">
             {t.completed}: {complete} / {tasks.length}
@@ -48,9 +48,9 @@ export default function BatchDemo({
       <section {...stylex.props(c.card, c.stack)} aria-label={t.tasks}>
         <h2 {...stylex.props(c.heading)}>{t.tasks}</h2>
         <div {...stylex.props(c.row)}>
-          <button
+          <Button
             type="button"
-            {...stylex.props(c.button, c.primary)}
+            variant="primary"
             onClick={() => {
               const id = nextId.current++;
               setTasks((current) => [
@@ -61,24 +61,22 @@ export default function BatchDemo({
           >
             <PlusIcon size={18} aria-hidden />
             {t.add}
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            {...stylex.props(c.button)}
             disabled={!tasks.some((task) => task.status !== 'done')}
             onClick={() => setTasks(advanceTasks)}
           >
             <PlayIcon size={18} aria-hidden />
             {t.advance}
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            {...stylex.props(c.button)}
             disabled={tasks.length === 0}
             onClick={() => setTasks([])}
           >
             {t.clear}
-          </button>
+          </Button>
         </div>
         {tasks.length === 0 ? (
           <p {...stylex.props(c.muted)}>{t.queueEmpty}</p>
@@ -92,10 +90,9 @@ export default function BatchDemo({
                   </strong>
                   <span {...stylex.props(c.muted)}>{t[task.status]}</span>
                 </div>
-                <button
+                <IconButton
                   type="button"
-                  aria-label={`${t.remove} Demo ${task.id}`}
-                  {...stylex.props(c.button)}
+                  label={`${t.remove} Demo ${task.id}`}
                   onClick={() =>
                     setTasks((current) =>
                       current.filter((item) => item.id !== task.id),
@@ -103,7 +100,7 @@ export default function BatchDemo({
                   }
                 >
                   <TrashIcon size={18} aria-hidden />
-                </button>
+                </IconButton>
               </li>
             ))}
           </ul>
