@@ -9,9 +9,11 @@
 - **WorkbenchShell**：仅管理插槽、布局、面板可见性与焦点。支持 canvas/form/batch/custom；header/left/right/bottom 均可省略，children 为主工作区。无插槽时不输出对应面板。
 - **Tool Module**：持有业务参数、输入、结果和算法。Lab 的三个 demo 也是各自持有状态；没有全站业务 Store。纯模拟逻辑在 `src/lab/demo-logic.ts`，不属于 Shell。
 
-Canvas 桌面为顶/左/中/右/底结构，中央允许自身滚动；900px 及以下把工具栏移至主区域下方，参数变为 Base UI Dialog Bottom Sheet。参数 Portal 始终指向同一个宿主且 keepMounted，响应式不复制参数树。工具状态在外层，因此关闭面板、切换宽度不会丢值。Dialog 负责焦点约束、Escape 和返回触发按钮。桌面面板非模态，普通页面不锁 body 滚动。
+V0.3-B 将 Canvas 更新为完整视口 `CanvasViewport + OverlayLayer`，上/左/右/下插槽不参与画布宽高分配。桌面 Inspector 非模态、默认关闭；900px 及以下为底部 Dock 与 Base UI Dialog Bottom Sheet。参数 Portal 始终指向同一个宿主且 keepMounted，响应式不复制参数树。工具状态在外层，因此关闭面板、切换宽度不会丢值。Dialog 负责焦点约束、Escape 和返回触发按钮。普通页面不锁 body 滚动。
 
-Form 是输入/设置/执行与输出的双栏自然流；窄屏单栏。Batch 是任务列表与参数区的自然流。custom 不附加画布语义。Motion 只用于模拟标记反馈，useReducedMotion 将其时长设为零。
+Form 是输入/设置/执行与输出的 Grid 自然流：无结果时合理宽度单列，有结果时约 55:45 双列；窄屏单列。Batch 队列为主、桌面设置列 320px，窄屏纵排。custom 不附加画布语义。Motion 只用于模拟标记反馈，useReducedMotion 将其时长设为零。
+
+`ToolPageFrame` 在 ToolRuntime/WorkbenchLab 组合层提供唯一产品入口和身份；Shell 的 header 是工具局部插槽。工具身份由 Registry 的已发布地区元数据得到，工具箱复用相同过滤；Lab 仅有明确 DEMO 标识与独立调试菜单。详见 [V0.3-B 合同与最新验收](workbench-appearance.md)，下方 V0.1 验收表为历史基线。
 
 ## 路由与生产隔离
 

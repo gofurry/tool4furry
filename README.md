@@ -1,6 +1,6 @@
 # Tool4Furry
 
-为兽圈创作与日常需求准备的开源浏览器工具站。当前为 **V0.3-A — Visual Foundation & Design Tokens**：统一 Creative Studio 字体、语义 Token 与基础控件状态；保留极简静态首页、三种开发工作台及文件交互预览，尚无正式发布的工具。
+为兽圈创作与日常需求准备的开源浏览器工具站。当前为 **V0.3-B — Workbench Appearance & Responsive Architecture**：统一产品入口、完整视口 Canvas 浮层与自然流 Form/Batch 工作台；沿用 Creative Studio 字体、Token 和控件，尚无正式发布的工具。
 
 前端及未来浏览器本地工具使用现有 [BSD-3-Clause](LICENSE) 协议。当前没有后端；未来 SaaS 后端将放在独立仓库。
 
@@ -20,7 +20,7 @@ pnpm dev
 | 路径 | 内容 |
 | --- | --- |
 | `/` | 静态首页；无正式工具时显示准备中的空状态 |
-| `/lab/canvas` | 模式切换、属性设置、模拟标记、手机参数抽屉 |
+| `/lab/canvas` | 完整视口画布、浮动 Dock、默认关闭的 Inspector、手机参数 Sheet |
 | `/lab/form` | 输入、参数、校验、模拟输出 |
 | `/lab/batch` | 增删示例任务、推进模拟状态、清空 |
 | `/lab/ui` | 基础控件、受控值、校验、Tooltip、确认弹窗和四类 Toast |
@@ -34,6 +34,7 @@ pnpm dev
 先用 Ctrl+C 停止 dev（也可用 `pnpm exec astro dev stop`），再顺序执行：
 
 ```powershell
+pnpm install --frozen-lockfile
 pnpm check
 pnpm test
 pnpm build:cn
@@ -83,6 +84,7 @@ docs/foundation.md 架构边界、Gate 与人工验收记录
 docs/ui-primitives.md 控件 API、弹层规则和 V0.2-A 验收
 docs/file-interactions.md 文件/滚动 API、边界和 V0.2-B 验收
 docs/visual-foundation.md 自托管字体、视觉 Token、控件状态与 V0.3-A 验收
+docs/workbench-appearance.md V0.3-B 完整合同、布局所有权、浏览器与构建验收
 ```
 
 技术栈：Astro SSG、React、TypeScript、StyleX、Motion、Base UI、Phosphor Icons、pnpm、Vitest。没有 SSR Adapter、全局业务 Store、通用画布引擎、数据库、Docker、Monorepo、Storybook 或 Playwright 测试框架。`pnpm-workspace.yaml` 仅保存 pnpm 安装策略，不定义子项目。
@@ -96,3 +98,7 @@ GitHub Actions 对 dev/main 的 push 与 PR 执行安装、检查、测试及双
 在 `/lab/ui` 用 Tab 聚焦、方向键切换 Select/Slider、空格切换 Checkbox、Escape 关闭弹层。清空名称并验证可查看错误；取消确认框不增加计数，确认才增加。连续触发消息至多显示三条；悬停/聚焦会暂停计时。手机参数抽屉中的嵌套 Select 可在 `/lab/canvas` 检查。
 
 在 `/lab/files` 选择或拖入 PNG/JPEG/WebP，每次最多 3 个、单文件最多 2 MiB。混入错误类型、超大或第 4 个文件，检查合法部分进入列表、拒绝原因留在选择区；重复选择同一文件应新增记录。Tab → Enter/Space 打开系统选择器；可禁用、移除或确认清空。宽度至少 900px 且精确指针下滚动长页，右下球显示进度，点击向上移动总可滚动距离的 25%；手机继续原生滚动。详细步骤及未完成的真机检查见文件交互文档。
+
+工作台入口与响应式合同见 [Workbench Appearance](docs/workbench-appearance.md)。品牌链接返回首页，独立工具箱按钮只展示当前地区已发布工具（目前为空）；烧瓶按钮收纳五个 DEV ONLY 预览。Canvas 的选择/标记属于当前 Demo 的局部操作；点击未被浮层覆盖的画布同样生效。
+
+人工重点复核 `/lab/canvas` 在 901/900px 切换、390px 竖屏及 812×375 横屏：打开参数前后画布不缩小，名称/大小/颜色/计数保留，Select → Sheet 两次 Escape 依次关闭且返回焦点。Form/Batch 手机依次阅读输入/执行/结果或队列/设置。内置 Chromium 验收属于视口模拟；真实 iOS/Android 的软键盘、触摸、安全区与辅助技术仍需人工检查。

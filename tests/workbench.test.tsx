@@ -13,6 +13,32 @@ beforeEach(() => {
   setViewport();
 });
 describe('shell contract', () => {
+  it('opens directly on a compact viewport with focus and nested Select intact', async () => {
+    setViewport(true);
+    const user = userEvent.setup();
+    render(<CanvasDemo t={t} header={null} />);
+    const trigger = screen.getByRole('button', { name: t.showParameters });
+    await user.click(trigger);
+    await waitFor(() =>
+      expect(document.activeElement).toBe(
+        screen.getByRole('button', { name: t.close }),
+      ),
+    );
+    const name = screen.getByRole('textbox', { name: t.label });
+    const color = screen.getByRole('combobox', { name: t.accent });
+    await user.click(color);
+    await user.click(await screen.findByRole('option', { name: t.orange }));
+    expect(color.textContent).toContain(t.orange);
+    await waitFor(() => expect(document.activeElement).toBe(color));
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(document.activeElement).toBe(trigger));
+    await user.click(trigger);
+    expect(screen.getByRole('textbox', { name: t.label })).toBe(name);
+    expect(
+      screen.getByRole('combobox', { name: t.accent }).textContent,
+    ).toContain(t.orange);
+  });
+
   it.each(['canvas', 'form', 'batch', 'custom'] as const)(
     '%s works with the main slot alone',
     (mode) => {
@@ -31,12 +57,34 @@ describe('shell contract', () => {
     const resize = setViewport();
     const user = userEvent.setup();
     const { container } = render(<CanvasDemo t={t} header={<h1>Demo</h1>} />);
+    expect(screen.queryByRole('textbox', { name: t.label })).toBeNull();
+    const opener = screen.getByRole('button', { name: t.showParameters });
+    expect(opener.getAttribute('aria-expanded')).toBe('false');
+    await user.click(opener);
     const name = await screen.findByRole('textbox', { name: t.label });
+    expect(opener.getAttribute('aria-expanded')).toBe('true');
+    expect(document.getElementById(opener.getAttribute('aria-controls')!)).toBe(
+      screen.getByRole('region', { name: t.parameters }),
+    );
     await user.clear(name);
     await user.type(name, 'kept');
+    const size = screen.getByRole('slider', { name: t.size });
+    act(() => size.focus());
+    await user.keyboard('{ArrowRight}');
+    const keptSize = size.getAttribute('aria-valuenow');
     await user.click(screen.getByRole('button', { name: t.stamp }));
     await user.click(screen.getByRole('button', { name: t.canvasAction }));
+    await user.click(screen.getByRole('button', { name: t.hideTools }));
+    await user.click(screen.getByRole('button', { name: t.showTools }));
+    expect(
+      screen
+        .getByRole('button', { name: t.stamp })
+        .getAttribute('aria-pressed'),
+    ).toBe('true');
     await user.click(screen.getByRole('button', { name: t.hideParameters }));
+    expect(screen.queryByRole('textbox', { name: t.label })).toBeNull();
+    await user.tab();
+    expect(document.activeElement).not.toBe(name);
     await user.click(screen.getByRole('button', { name: t.showParameters }));
     expect(
       (screen.getByRole('textbox', { name: t.label }) as HTMLInputElement)
@@ -48,7 +96,9 @@ describe('shell contract', () => {
     expect(screen.getByRole('textbox', { name: t.label })).toBe(name);
     // Base UI adds a hidden Select input; still require exactly one parameter textbox DOM node.
     expect(
-      container.querySelectorAll('input:not([type="range"]):not([aria-hidden="true"])'),
+      container.querySelectorAll(
+        'input:not([type="range"]):not([aria-hidden="true"])',
+      ),
     ).toHaveLength(1);
     const color = screen.getByRole('combobox', { name: t.accent });
     await user.click(color);
@@ -60,14 +110,18 @@ describe('shell contract', () => {
     await user.click(color);
     // Base UI installs focus/dismissal after mounting the portal. Send Escape only once ready.
     await waitFor(() =>
-      expect(document.activeElement).toBe(screen.getByRole('option', { name: t.orange })),
+      expect(document.activeElement).toBe(
+        screen.getByRole('option', { name: t.orange }),
+      ),
     );
     await user.keyboard('{Escape}');
     await waitFor(() => expect(document.activeElement).toBe(color));
     expect(screen.getByRole('dialog')).toBeTruthy();
     await user.keyboard('{Escape}');
     await waitFor(() =>
-      expect(document.activeElement?.textContent).toBe(t.showParameters),
+      expect(document.activeElement?.getAttribute('aria-label')).toBe(
+        t.showParameters,
+      ),
     );
     act(() => resize(false));
     expect(
@@ -76,6 +130,24 @@ describe('shell contract', () => {
     ).toBe('kept');
     expect(screen.getByRole('status').textContent).toContain('1');
     expect(screen.getByRole('combobox').textContent).toContain(t.orange);
+    expect(screen.getByRole('textbox', { name: t.label })).toBe(name);
+    expect(
+      screen
+        .getByRole('slider', { name: t.size })
+        .getAttribute('aria-valuenow'),
+    ).toBe(keptSize);
+    await user.click(screen.getByRole('button', { name: t.reset }));
+    expect((name as HTMLInputElement).value).toBe(t.sampleLabel);
+    expect(screen.getByRole('status').textContent).toContain('0');
+    expect(
+      screen
+        .getByRole('button', { name: t.select })
+        .getAttribute('aria-pressed'),
+    ).toBe('true');
+    await user.click(screen.getByRole('button', { name: t.canvasAction }));
+    expect(screen.getByRole('status').textContent).toContain(t.selected);
+    await user.click(screen.getByRole('button', { name: t.canvasAction }));
+    expect(screen.getByRole('status').textContent).not.toContain(t.selected);
   });
 });
 describe('observable demos', () => {

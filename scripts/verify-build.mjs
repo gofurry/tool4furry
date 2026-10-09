@@ -16,7 +16,7 @@ assert(
 );
 assert(
   !files.some((file) =>
-    /LabRuntime|WorkbenchLab|CanvasDemo|FormDemo|BatchDemo|UILab|FilesLab/.test(
+    /LabRuntime|WorkbenchLab|LabMenu|CanvasDemo|FormDemo|BatchDemo|UILab|FilesLab/.test(
       file,
     ),
   ),
@@ -162,7 +162,7 @@ for (const font of ['dm-sans', 'noto-sans-sc']) {
 for (const file of files.filter((file) => file.endsWith('.js'))) {
   const js = await readFile(resolve(root, file), 'utf8');
   assert(
-    !/data-workbench|data-ui-lab|data-files-lab|simulateText|advanceTasks|canvasAction/.test(
+    !/data-workbench|data-ui-lab|data-files-lab|simulateText|advanceTasks|canvasAction|DEV ONLY/.test(
       js,
     ),
     `Demo implementation leaked: ${file}`,

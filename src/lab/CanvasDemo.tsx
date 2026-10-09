@@ -10,7 +10,8 @@ import WorkbenchShell from '../workbench/WorkbenchShell';
 import type { LabMessages as Messages } from './messages';
 import { controls as c } from '../styles/controls';
 import { tokens } from '../styles/tokens.stylex';
-import { Button } from '../ui/Button';
+import { IconButton } from '../ui/Button';
+import { Tooltip } from '../ui/Tooltip';
 import { TextField } from '../ui/TextField';
 import { SelectField } from '../ui/SelectField';
 import { SliderField } from '../ui/SliderField';
@@ -44,24 +45,38 @@ export default function CanvasDemo({
       header={header}
       left={
         <div {...stylex.props(s.toolbar)}>
-          <Button
-            type="button"
-            aria-pressed={action === 'select'}
-            variant={action === 'select' ? 'primary' : 'secondary'}
-            onClick={() => setAction('select')}
-          >
-            <CursorIcon size={20} aria-hidden />
-            {t.select}
-          </Button>
-          <Button
-            type="button"
-            aria-pressed={action === 'stamp'}
-            variant={action === 'stamp' ? 'primary' : 'secondary'}
-            onClick={() => setAction('stamp')}
-          >
-            <StarIcon size={20} aria-hidden />
-            {t.stamp}
-          </Button>
+          <Tooltip content={t.select}>
+            <IconButton
+              label={t.select}
+              size="sm"
+              type="button"
+              aria-pressed={action === 'select'}
+              variant={action === 'select' ? 'primary' : 'secondary'}
+              onClick={() => setAction('select')}
+            >
+              <CursorIcon
+                size={20}
+                weight={action === 'select' ? 'fill' : 'regular'}
+                aria-hidden
+              />
+            </IconButton>
+          </Tooltip>
+          <Tooltip content={t.stamp}>
+            <IconButton
+              label={t.stamp}
+              size="sm"
+              type="button"
+              aria-pressed={action === 'stamp'}
+              variant={action === 'stamp' ? 'primary' : 'secondary'}
+              onClick={() => setAction('stamp')}
+            >
+              <StarIcon
+                size={20}
+                weight={action === 'stamp' ? 'fill' : 'regular'}
+                aria-hidden
+              />
+            </IconButton>
+          </Tooltip>
         </div>
       }
       right={
@@ -94,31 +109,30 @@ export default function CanvasDemo({
       }
       bottom={
         <>
-          <span role="status" {...stylex.props(c.muted)}>
+          <span role="status" {...stylex.props(c.muted, s.status)}>
             {t.marks}: {marks}
             {selected ? ` · ${t.selected}` : ''}
           </span>
-          <Button onClick={reset}>
+          <IconButton label={t.reset} title={t.reset} size="sm" onClick={reset}>
             <ArrowCounterClockwiseIcon size={18} aria-hidden />
-            {t.reset}
-          </Button>
+          </IconButton>
         </>
       }
     >
-      <div {...stylex.props(s.stage)}>
+      <button
+        type="button"
+        aria-label={t.canvasAction}
+        {...stylex.props(s.stage)}
+        onClick={() =>
+          action === 'stamp'
+            ? setMarks((value) => value + 1)
+            : setSelected((value) => !value)
+        }
+      >
         <span {...stylex.props(s.caption)}>
           {t.preview} / {t[action]}
         </span>
-        <button
-          type="button"
-          aria-label={t.canvasAction}
-          {...stylex.props(s.canvasButton, selected && s.selected)}
-          onClick={() =>
-            action === 'stamp'
-              ? setMarks((value) => value + 1)
-              : setSelected((value) => !value)
-          }
-        >
+        <span {...stylex.props(s.canvasButton, selected && s.selected)}>
           <motion.span
             key={marks}
             initial={false}
@@ -132,9 +146,9 @@ export default function CanvasDemo({
           <span {...stylex.props(c.muted)}>
             {t.marks}: {marks}
           </span>
-        </button>
-        <p {...stylex.props(c.muted)}>{t.canvasHint}</p>
-      </div>
+        </span>
+        <span {...stylex.props(c.muted, s.hint)}>{t.canvasHint}</span>
+      </button>
     </WorkbenchShell>
   );
 }
@@ -142,32 +156,37 @@ const s = stylex.create({
   toolbar: {
     display: 'flex',
     flexDirection: { default: 'column', '@media (max-width: 900px)': 'row' },
-    flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: 8,
+    gap: 4,
   },
   stage: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 20,
-    minHeight: '100%',
-    padding: 16,
+    gap: { default: 16, '@media (max-height: 500px)': 8 },
+    width: '100%',
+    height: '100%',
+    borderWidth: 0,
+    color: tokens.textPrimary,
+    backgroundColor: tokens.page,
+    padding: '80px 16px',
+    outlineOffset: -4,
     backgroundImage: `radial-gradient(${tokens.border} 1px, transparent 1px)`,
     backgroundSize: '20px 20px',
-    borderRadius: 8,
   },
   caption: { fontSize: 12, color: tokens.textSecondary },
   canvasButton: {
     width: 'min(100%, 320px)',
-    minHeight: 220,
-    padding: 24,
+    padding: {
+      default: tokens.space24,
+      '@media (max-height: 500px)': tokens.space12,
+    },
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 16,
+    gap: { default: 16, '@media (max-height: 500px)': 8 },
     backgroundColor: tokens.surface,
     borderWidth: 1,
     borderStyle: 'solid',
@@ -180,4 +199,6 @@ const s = stylex.create({
   symbol: { display: 'flex', color: tokens.sage },
   orange: { color: tokens.brand },
   label: { maxWidth: '100%', overflowWrap: 'anywhere', fontSize: 20 },
+  status: { fontSize: { default: 13, '@media (max-width: 900px)': 12 } },
+  hint: { display: { default: 'block', '@media (max-height: 500px)': 'none' } },
 });

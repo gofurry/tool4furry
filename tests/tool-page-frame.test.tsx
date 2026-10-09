@@ -1,0 +1,145 @@
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import ToolPageFrame from '../src/tools/ToolPageFrame';
+import WorkbenchLab from '../src/lab/WorkbenchLab';
+import { UiProvider } from '../src/ui/UiProvider';
+import * as registry from '../src/tools/registry';
+import type { ToolDefinition } from '../src/tools/types';
+import { messages } from '../src/i18n/messages';
+import { setViewport } from './setup';
+
+afterEach(() => vi.restoreAllMocks());
+
+describe('product navigation', () => {
+  it.each(['cn', 'global'] as const)(
+    'shows an honest empty toolbox in %s with keyboard dismissal',
+    async (region) => {
+      const user = userEvent.setup();
+      const t = messages[region];
+      const { container } = render(
+        <ToolPageFrame region={region} mode="canvas" title="Current identity">
+          Workspace
+        </ToolPageFrame>,
+      );
+      expect(container.querySelectorAll('[data-tool-page-entry]')).toHaveLength(
+        1,
+      );
+      expect(
+        screen
+          .getByRole('link', { name: `Tool4Furry · ${t.home}` })
+          .getAttribute('href'),
+      ).toBe('/');
+      const trigger = screen.getByRole('button', { name: t.tools });
+      await user.tab(); // Brand link and toolbox are separate focus targets.
+      await user.tab();
+      expect(document.activeElement).toBe(trigger);
+      await user.keyboard('{Enter}');
+      expect(await screen.findByText(t.empty)).toBeTruthy();
+      expect(
+        screen
+          .getByRole('menu', { name: t.tools })
+          .querySelectorAll('a[href^="/tools/"], a[href^="/lab/"]'),
+      ).toHaveLength(0);
+      expect(
+        screen.getByRole('menuitem', { name: t.back }).getAttribute('href'),
+      ).toBe('/');
+      await waitFor(() =>
+        expect(document.activeElement).toBe(
+          screen.getByRole('menuitem', { name: t.back }),
+        ),
+      );
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
+      expect(document.activeElement).toBe(trigger);
+      expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(
+        'Current identity',
+      );
+    },
+  );
+
+  it('only links registry tools published for this region, using flat slugs', async () => {
+    const entry = (
+      id: string,
+      status: ToolDefinition['status'],
+      regions: ToolDefinition['regions'],
+    ): ToolDefinition => ({
+      id,
+      slug: `${id}-slug`,
+      status,
+      regions,
+      category: 'fixture-only',
+      mode: 'form',
+      copy: {
+        cn: { title: id, description: '' },
+        global: { title: id, description: '' },
+      },
+    });
+    const fixtures = [
+      entry('draft', 'draft', ['cn']),
+      entry('overseas', 'published', ['global']),
+      entry('current', 'published', ['cn']),
+    ];
+    const original = registry.getPublishedTools;
+    const published = vi
+      .spyOn(registry, 'getPublishedTools')
+      .mockImplementation((region) => original(region, fixtures));
+    const user = userEvent.setup();
+    render(
+      <ToolPageFrame
+        region="cn"
+        mode="form"
+        currentToolId="current"
+        title="current"
+      >
+        Workspace
+      </ToolPageFrame>,
+    );
+    await user.click(screen.getByRole('button', { name: messages.cn.tools }));
+    const item = await screen.findByRole('menuitem', { name: 'current' });
+    expect(item.getAttribute('href')).toBe('/tools/current-slug');
+    expect(item.getAttribute('aria-current')).toBe('page');
+    expect(screen.queryByText('draft')).toBeNull();
+    expect(screen.queryByText('overseas')).toBeNull();
+    expect(published).toHaveBeenCalledWith('cn');
+    expect(registry.tools).toEqual([]); // Fixtures never populate the real registry.
+  });
+
+  it('separates DEV navigation from the toolbox and local canvas actions', async () => {
+    setViewport();
+    const user = userEvent.setup();
+    const { container } = render(
+      <UiProvider labels={messages.cn}>
+        <WorkbenchLab region="cn" mode="canvas" />
+      </UiProvider>,
+    );
+    expect(container.querySelectorAll('[data-tool-page-entry]')).toHaveLength(
+      1,
+    );
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe(
+      'DEMO · 画布',
+    );
+    expect(screen.getByRole('button', { name: '选择' })).toBeTruthy();
+    expect(container.querySelectorAll('a[href^="/lab/"]')).toHaveLength(0);
+    await user.click(
+      screen.getByRole('button', { name: '开发预览 · DEV ONLY' }),
+    );
+    const menu = await screen.findByRole('menu', {
+      name: '开发预览 · DEV ONLY',
+    });
+    expect(
+      [...menu.querySelectorAll('a')].map((link) => link.getAttribute('href')),
+    ).toEqual([
+      '/lab/canvas',
+      '/lab/form',
+      '/lab/batch',
+      '/lab/ui',
+      '/lab/files',
+    ]);
+    expect(
+      screen
+        .getByRole('menuitem', { name: '画布' })
+        .getAttribute('aria-current'),
+    ).toBe('page');
+  });
+});

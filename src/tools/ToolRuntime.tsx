@@ -3,6 +3,10 @@ import type { Region } from '../config/region';
 import { messages } from '../i18n/messages';
 import { toolLoaders } from './loaders';
 import { UiProvider } from '../ui/UiProvider';
+import { getPublishedTools } from './registry';
+import ToolPageFrame from './ToolPageFrame';
+import * as stylex from '@stylexjs/stylex';
+import { tokens } from '../styles/tokens.stylex';
 class LoadBoundary extends Component<
   { children: ReactNode; fallback: ReactNode },
   { failed: boolean }
@@ -23,18 +27,48 @@ export default function ToolRuntime({
   region: Region;
 }) {
   const t = messages[region];
+  const definition = getPublishedTools(region).find(
+    (tool) => tool.id === toolId,
+  );
   const Tool = useMemo(() => {
     const loader = toolLoaders[toolId];
     return loader ? lazy(loader) : null;
   }, [toolId]);
-  const fallback = <p role="alert">{t.unavailable}</p>;
+  const statusStyle = stylex.props(
+    s.status,
+    definition?.mode === 'canvas' && s.canvasStatus,
+  );
+  const fallback = (
+    <p role="alert" {...statusStyle}>
+      {t.unavailable}
+    </p>
+  );
   return (
     <UiProvider labels={t}>
-      <LoadBoundary key={toolId} fallback={fallback}>
-        <Suspense fallback={<p role="status">{t.loading}</p>}>
-          {Tool ? <Tool region={region} /> : fallback}
-        </Suspense>
-      </LoadBoundary>
+      <ToolPageFrame
+        region={region}
+        mode={definition?.mode ?? 'custom'}
+        title={definition?.copy[region].title ?? t.unavailable}
+        currentToolId={definition?.id}
+      >
+        <LoadBoundary key={toolId} fallback={fallback}>
+          <Suspense
+            fallback={
+              <p role="status" {...statusStyle}>
+                {t.loading}
+              </p>
+            }
+          >
+            {definition && Tool ? <Tool region={region} /> : fallback}
+          </Suspense>
+        </LoadBoundary>
+      </ToolPageFrame>
     </UiProvider>
   );
 }
+
+const s = stylex.create({
+  status: { padding: tokens.space24, margin: 0 },
+  // Loading/error copy stays below the product entry before a Canvas tool mounts.
+  canvasStatus: { paddingTop: 96 },
+});

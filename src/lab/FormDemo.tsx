@@ -28,7 +28,6 @@ export default function FormDemo({
       right={
         <section {...stylex.props(c.card, c.stack)} aria-label={t.output}>
           <h2 {...stylex.props(c.heading)}>{t.output}</h2>
-          <span {...stylex.props(c.muted)}>{t.preview}</span>
           <output aria-live="polite" {...stylex.props(s.output)}>
             {result ?? t.outputHint}
           </output>
@@ -44,7 +43,6 @@ export default function FormDemo({
           setResult(next);
         }}
       >
-        <h2 {...stylex.props(c.heading)}>{t.input}</h2>
         <TextAreaField
           label={t.input}
           rows={5}
