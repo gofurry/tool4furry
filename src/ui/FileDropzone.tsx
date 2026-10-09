@@ -154,23 +154,32 @@ export function FileDropzone({
 }
 const styles = stylex.create({
   zone: {
+    backgroundColor: {
+      default: tokens.surface,
+      ':hover': tokens.page,
+      ':disabled': tokens.surface,
+    },
     flexDirection: 'column',
     width: '100%',
     minHeight: 156,
-    padding: 24,
+    padding: tokens.space24,
+    borderRadius: tokens.radiusLg,
     borderStyle: 'dashed',
     textAlign: 'center',
     overflowWrap: 'anywhere',
-    opacity: { default: 1, ':disabled': 0.5 },
+    opacity: { default: 1, ':disabled': 0.55 },
   },
   dragging: {
-    backgroundColor: tokens.soft,
-    borderColor: tokens.accent,
+    backgroundColor: {
+      default: tokens.actionTint,
+      ':hover': tokens.actionTint,
+    },
+    borderColor: tokens.action,
     outlineStyle: 'solid',
     outlineWidth: 2,
     outlineColor: tokens.focus,
-    outlineOffset: 3,
+    outlineOffset: 2,
   },
-  label: { fontWeight: 650, maxWidth: '100%' },
+  label: { fontWeight: 600, maxWidth: '100%' },
   issues: { paddingInlineStart: 24 },
 });

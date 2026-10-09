@@ -33,8 +33,8 @@ export const fieldStyles = stylex.create({
     overflowWrap: 'anywhere',
   },
   area: { resize: 'vertical', minHeight: 120 },
-  disabled: { opacity: 0.5 },
-  label: { fontWeight: 550 },
+  disabled: { opacity: 0.55, cursor: 'not-allowed' },
+  label: { fontWeight: 500 },
 });
 export function FieldFeedback({
   hint,

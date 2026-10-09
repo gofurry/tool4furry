@@ -2,6 +2,7 @@ import type { ComponentProps, ReactNode } from 'react';
 import * as stylex from '@stylexjs/stylex';
 import { CircleNotchIcon } from '@phosphor-icons/react';
 import { controls } from '../styles/controls';
+import { tokens } from '../styles/tokens.stylex';
 
 export interface ButtonProps extends ComponentProps<'button'> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -18,9 +19,10 @@ const styles = stylex.create({
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: tokens.space8,
   },
   hidden: { opacity: 0 },
+  selected: { textDecoration: 'underline', textUnderlineOffset: 4 },
   spinner: {
     position: 'absolute',
     animationName: spin,
@@ -50,6 +52,8 @@ export function Button({
     variant === 'ghost' && controls.ghost,
     variant === 'danger' && controls.danger,
     size === 'sm' && controls.small,
+    (props['aria-pressed'] === true || props['aria-pressed'] === 'true') &&
+      styles.selected,
   );
   return (
     <button

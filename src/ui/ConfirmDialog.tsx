@@ -44,7 +44,7 @@ export function ConfirmDialog({
           initialFocus={cancelRef}
           {...stylex.props(styles.popup, controls.stack)}
         >
-          <AlertDialog.Title {...stylex.props(controls.heading)}>
+          <AlertDialog.Title {...stylex.props(controls.heading, styles.title)}>
             {title}
           </AlertDialog.Title>
           <AlertDialog.Description {...stylex.props(styles.description)}>
@@ -86,17 +86,22 @@ const styles = stylex.create({
     maxHeight: 'calc(100dvh - 32px)',
     overflowY: 'auto',
     overscrollBehavior: 'contain',
-    backgroundColor: tokens.elevated,
-    color: tokens.ink,
-    padding: 24,
-    borderRadius: 12,
-    boxShadow: tokens.shadow,
+    backgroundColor: tokens.surface,
+    color: tokens.textPrimary,
+    padding: tokens.space24,
+    borderRadius: tokens.radiusXl,
+    boxShadow: tokens.shadowFloating,
   },
-  description: { margin: 0, color: tokens.muted, overflowWrap: 'anywhere' },
+  description: {
+    margin: 0,
+    color: tokens.textSecondary,
+    overflowWrap: 'anywhere',
+  },
+  title: { fontWeight: 700 },
   actions: {
     display: 'flex',
     justifyContent: 'flex-end',
     flexWrap: 'wrap',
-    gap: 10,
+    gap: tokens.space8,
   },
 });

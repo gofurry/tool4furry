@@ -164,8 +164,8 @@ const s = stylex.create({
     justifyContent: 'space-between',
     gap: 12,
     padding: 16,
-    borderRadius: tokens.radius,
-    backgroundColor: tokens.paper,
+    borderRadius: tokens.radiusMd,
+    backgroundColor: tokens.page,
   },
   metadata: {
     display: 'grid',

@@ -63,9 +63,9 @@ const s = stylex.create({
     justifyContent: 'space-between',
   },
   demo: {
-    color: tokens.accent,
-    fontSize: 11,
-    fontWeight: 750,
+    color: tokens.action,
+    fontSize: 12,
+    fontWeight: 600,
     letterSpacing: '0.08em',
   },
 });

@@ -64,7 +64,13 @@ export function SliderField({
   );
 }
 const styles = stylex.create({
-  label: { display: 'flex', justifyContent: 'space-between', gap: 12 },
+  label: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: tokens.space12,
+    fontWeight: 500,
+    fontVariantNumeric: 'tabular-nums',
+  },
   control: {
     display: 'flex',
     alignItems: 'center',
@@ -78,20 +84,24 @@ const styles = stylex.create({
     width: '100%',
     height: 6,
     borderRadius: 3,
-    backgroundColor: tokens.line,
+    backgroundColor: tokens.border,
   },
-  indicator: { backgroundColor: tokens.accent, borderRadius: 3 },
+  indicator: { backgroundColor: tokens.action, borderRadius: 3 },
   thumb: {
     width: 26,
     height: 26,
     borderRadius: '50%',
-    backgroundColor: tokens.surface,
+    backgroundColor: {
+      default: tokens.surface,
+      ':hover': tokens.actionTint,
+      ':active': tokens.actionTint,
+    },
     borderWidth: 2,
     borderStyle: 'solid',
-    borderColor: tokens.accent,
+    borderColor: tokens.action,
     outlineColor: tokens.focus,
-    outlineWidth: { default: 0, ':focus-within': 3 },
+    outlineWidth: { default: 0, ':focus-within': 2 },
     outlineStyle: 'solid',
-    outlineOffset: 3,
+    outlineOffset: 2,
   },
 });

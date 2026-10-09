@@ -65,12 +65,15 @@ for (const page of htmlFiles.filter((file) => file.startsWith('tools/'))) {
     `Unlisted tool page: ${page}`,
   );
 }
+const fontAssets = new Set();
+const inlineFonts = new Set();
 for (const page of htmlFiles) {
   const content = await readFile(resolve(root, page), 'utf8');
   assert(!content.includes('virtual:stylex'), `Dev StyleX runtime in ${page}`);
   const dom = new JSDOM(content).window.document;
   const stylesheets = [...dom.querySelectorAll('link[rel="stylesheet"]')];
   assert(stylesheets.length > 0, `Missing extracted CSS in ${page}`);
+  const linkedCSS = [];
   for (const link of stylesheets) {
     const path = link.getAttribute('href');
     assert(
@@ -78,11 +81,83 @@ for (const page of htmlFiles) {
       'CSS must use portable static asset paths',
     );
     const css = await readFile(resolve(root, path.slice(1)), 'utf8');
+    linkedCSS.push(css);
+    assert(!/@import\b/.test(css), `Unbundled CSS import in ${path}`);
+    for (const [, , asset] of css.matchAll(/url\(\s*(['"]?)(.*?)\1\s*\)/g)) {
+      // Vite embeds a few tiny Unicode subsets in the locally served CSS.
+      if (asset.startsWith('data:font/woff2;base64,')) {
+        const bytes = Buffer.from(
+          asset.slice('data:font/woff2;base64,'.length),
+          'base64',
+        );
+        assert.equal(
+          bytes.toString('ascii', 0, 4),
+          'wOF2',
+          'Invalid embedded WOFF2',
+        );
+        inlineFonts.add(asset);
+        continue;
+      }
+      const url = new URL(asset, `https://static.invalid${path}`);
+      assert(
+        url.origin === 'https://static.invalid' &&
+          url.pathname.startsWith('/_astro/'),
+        `Non-local CSS asset: ${asset.slice(0, 100)}`,
+      );
+      const bytes = await readFile(resolve(root, url.pathname.slice(1)));
+      assert(bytes.length > 0, `Empty CSS asset: ${asset}`);
+      if (url.pathname.endsWith('.woff2')) {
+        assert.equal(
+          bytes.toString('ascii', 0, 4),
+          'wOF2',
+          `Invalid WOFF2: ${asset}`,
+        );
+        fontAssets.add(url.pathname);
+      }
+    }
+  }
+  const css = linkedCSS.join('\n');
+  assert(
+    css.includes('@layer priority') && css.includes('--'),
+    'Linked CSS must include extracted StyleX styles and tokens',
+  );
+  for (const family of ['DM Sans Variable', 'Noto Sans SC Variable'])
+    assert(css.includes(family), `Missing self-hosted font: ${family}`);
+  const faces = [...css.matchAll(/@font-face\s*\{([^}]+)\}/g)].map(
+    (match) => match[1],
+  );
+  assert(faces.length > 0, 'Missing bundled font faces');
+  for (const face of faces) {
     assert(
-      css.includes('@layer priority') && css.includes('--'),
-      'StyleX styles and tokens must be extracted',
+      /font-style:\s*normal/.test(face) && /font-display:\s*swap/.test(face),
+      'Only normal swap fonts are expected',
+    );
+    assert(
+      /font-weight:\s*100 (900|1000)/.test(face) &&
+        /unicode-range:/i.test(face),
+      'Variable weight and Unicode subsets must be preserved',
     );
   }
+  assert.equal(
+    dom.querySelectorAll('link[rel="preload"][as="font"]').length,
+    0,
+    'Do not preload all font subsets',
+  );
+}
+assert(fontAssets.size > 0, 'Missing self-hosted WOFF2 assets');
+for (const font of ['dm-sans', 'noto-sans-sc']) {
+  assert.equal(
+    (
+      await readFile(resolve(root, 'licenses', `${font}-OFL.txt`), 'utf8')
+    ).replaceAll('\r\n', '\n'),
+    (
+      await readFile(
+        resolve('node_modules/@fontsource-variable', font, 'LICENSE'),
+        'utf8',
+      )
+    ).replaceAll('\r\n', '\n'),
+    `Font license must accompany the static assets: ${font}`,
+  );
 }
 for (const file of files.filter((file) => file.endsWith('.js'))) {
   const js = await readFile(resolve(root, file), 'utf8');
@@ -95,5 +170,5 @@ for (const file of files.filter((file) => file.endsWith('.js'))) {
 }
 assert((await stat(root)).isDirectory());
 console.log(
-  `Verified ${region}: ${htmlFiles.length} static pages, extracted StyleX CSS, correct locale/canonical, no Lab routes or demo implementation.`,
+  `Verified ${region}: ${htmlFiles.length} static pages, extracted StyleX CSS, ${fontAssets.size} local WOFF2 assets + ${inlineFonts.size} embedded subsets, correct locale/canonical, no Lab routes or demo implementation.`,
 );

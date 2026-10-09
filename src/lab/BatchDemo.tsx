@@ -117,7 +117,7 @@ const s = stylex.create({
     justifyContent: 'space-between',
     gap: 16,
     padding: 14,
-    backgroundColor: tokens.paper,
+    backgroundColor: tokens.page,
     borderRadius: 8,
   },
   taskText: { display: 'grid', gap: 4, minWidth: 0, overflowWrap: 'anywhere' },

@@ -3,6 +3,9 @@ import * as stylex from '@stylexjs/stylex';
 import { region, regionConfig } from '../config/site';
 import { messages } from '../i18n/messages';
 import { siteStyles as s } from '../styles/site';
+import { tokens } from '../styles/tokens.stylex';
+import '@fontsource-variable/dm-sans/wght.css';
+import '@fontsource-variable/noto-sans-sc/wght.css';
 import '../styles/global.css';
 interface Props { title: string; description?: string; workspace?: boolean; noindex?: boolean }
 const { title, description, workspace = false, noindex = false } = Astro.props;
@@ -23,12 +26,12 @@ const canonical = new URL(Astro.url.pathname, regionConfig.site);
       <script is:inline type="module" src="/@id/virtual:stylex:css-only"></script>
     </>}
   </head>
-  <body>
+  <body {...stylex.attrs(s.body)} style={`--t4f-focus: ${tokens.focus};`}>
     <div {...stylex.attrs(s.frame)}>
       <a {...stylex.attrs(s.skip)} href="#main-content">{t.skip}</a>
       {!workspace && <header {...stylex.attrs(s.width)}>
         <nav {...stylex.attrs(s.nav)} aria-label={t.home}>
-          <a {...stylex.attrs(s.brand)} href="/">Tool4Furry<span aria-hidden="true"> ↗</span></a>
+          <a {...stylex.attrs(s.brand)} href="/">Tool4Furry<span {...stylex.attrs(s.brandMark)} aria-hidden="true"> ↗</span></a>
           <a {...stylex.attrs(s.link)} href="https://github.com/gofurry/tool4furry">{t.source}</a>
         </nav>
       </header>}

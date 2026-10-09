@@ -2,6 +2,12 @@ import * as stylex from '@stylexjs/stylex';
 import { tokens } from './tokens.stylex';
 
 export const siteStyles = stylex.create({
+  body: {
+    color: tokens.textPrimary,
+    backgroundColor: tokens.page,
+    fontSize: 16,
+  },
+  brandMark: { color: tokens.brand },
   frame: { minHeight: '100dvh', display: 'flex', flexDirection: 'column' },
   nav: {
     display: 'flex',
@@ -11,7 +17,7 @@ export const siteStyles = stylex.create({
     paddingBlock: 20,
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
-    borderBottomColor: tokens.line,
+    borderBottomColor: tokens.border,
   },
   width: {
     width: '100%',
@@ -20,14 +26,14 @@ export const siteStyles = stylex.create({
     marginInline: 'auto',
   },
   brand: {
-    color: tokens.ink,
+    color: tokens.textPrimary,
     fontSize: 20,
-    fontWeight: 750,
+    fontWeight: 700,
     textDecoration: 'none',
     letterSpacing: '-0.04em',
   },
   link: {
-    color: tokens.accent,
+    color: tokens.action,
     minHeight: 44,
     display: 'inline-flex',
     alignItems: 'center',
@@ -41,11 +47,11 @@ export const siteStyles = stylex.create({
     display: 'inline-block',
     fontSize: 12,
     letterSpacing: '0.06em',
-    color: tokens.accent,
+    color: tokens.action,
     borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: tokens.line,
-    borderRadius: 6,
+    borderColor: tokens.border,
+    borderRadius: tokens.radiusSm,
     paddingBlock: 6,
     paddingInline: 10,
   },
@@ -53,22 +59,31 @@ export const siteStyles = stylex.create({
     maxWidth: 750,
     textWrap: 'balance',
     fontSize: { default: 56, '@media (max-width: 600px)': 36 },
-    fontWeight: 650,
+    fontWeight: 700,
     lineHeight: 1.2,
     letterSpacing: '-0.045em',
     marginBlock: 24,
   },
-  intro: { fontSize: 18, color: tokens.muted, maxWidth: 680, lineHeight: 1.8 },
+  intro: {
+    fontSize: 18,
+    color: tokens.textSecondary,
+    maxWidth: 680,
+    lineHeight: 1.8,
+  },
   section: { marginTop: 64 },
   sectionHeading: { fontSize: 15, fontWeight: 600, marginBottom: 16 },
   empty: {
-    backgroundColor: tokens.soft,
-    borderRadius: 12,
-    padding: { default: 32, '@media (max-width: 600px)': 24 },
+    backgroundColor: tokens.surfaceMuted,
+    borderRadius: tokens.radiusLg,
+    padding: {
+      default: tokens.space32,
+      '@media (max-width: 600px)': tokens.space24,
+    },
   },
   emptyTitle: { marginBlock: '0 12px', fontSize: 24, fontWeight: 600 },
   description: {
-    color: tokens.muted,
+    // This paragraph sits on surfaceMuted; secondary text is only 4.28:1 there.
+    color: tokens.textPrimary,
     maxWidth: 650,
     lineHeight: 1.8,
     margin: 0,
@@ -76,10 +91,10 @@ export const siteStyles = stylex.create({
   footer: {
     paddingBlock: 24,
     fontSize: 13,
-    color: tokens.muted,
+    color: tokens.textSecondary,
     borderTopWidth: 1,
     borderTopStyle: 'solid',
-    borderTopColor: tokens.line,
+    borderTopColor: tokens.border,
   },
   cards: {
     display: 'grid',
@@ -93,8 +108,8 @@ export const siteStyles = stylex.create({
     padding: 24,
     borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: tokens.line,
-    borderRadius: 12,
+    borderColor: tokens.border,
+    borderRadius: tokens.radiusLg,
     textDecoration: 'none',
   },
   skip: {

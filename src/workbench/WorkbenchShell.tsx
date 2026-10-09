@@ -162,7 +162,7 @@ export default function WorkbenchShell({
 }
 
 const s = stylex.create({
-  shell: { minWidth: 0, color: tokens.ink },
+  shell: { minWidth: 0, color: tokens.textPrimary, fontSize: 14 },
   canvas: {
     height: '100dvh',
     minHeight: 540,
@@ -173,7 +173,7 @@ const s = stylex.create({
     padding: { default: '16px 24px', '@media (max-width: 600px)': '12px 16px' },
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
-    borderBottomColor: tokens.line,
+    borderBottomColor: tokens.border,
     backgroundColor: tokens.surface,
   },
   switches: {
@@ -184,7 +184,7 @@ const s = stylex.create({
     padding: '8px 16px',
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
-    borderBottomColor: tokens.line,
+    borderBottomColor: tokens.border,
   },
   desktopOnly: {
     display: { default: 'inline-flex', '@media (max-width: 900px)': 'none' },
@@ -231,7 +231,7 @@ const s = stylex.create({
     backgroundColor: tokens.surface,
     borderRightWidth: 1,
     borderRightStyle: 'solid',
-    borderRightColor: tokens.line,
+    borderRightColor: tokens.border,
   },
   closedLeft: {
     display: { default: 'none', '@media (max-width: 900px)': 'block' },
@@ -263,7 +263,7 @@ const s = stylex.create({
     paddingBottom: 'max(20px, env(safe-area-inset-bottom))',
     borderLeftWidth: 1,
     borderLeftStyle: 'solid',
-    borderLeftColor: tokens.line,
+    borderLeftColor: tokens.border,
     backgroundColor: tokens.surface,
     position: { default: 'relative', '@media (max-width: 900px)': 'fixed' },
     bottom: { default: null, '@media (max-width: 900px)': 0 },
@@ -297,6 +297,6 @@ const s = stylex.create({
     backgroundColor: tokens.surface,
     borderTopWidth: 1,
     borderTopStyle: 'solid',
-    borderTopColor: tokens.line,
+    borderTopColor: tokens.border,
   },
 });
