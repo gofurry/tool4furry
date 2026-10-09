@@ -40,6 +40,12 @@ export default function ToolPageFrame({
             aria-label={`Tool4Furry · ${t.home}`}
             {...stylex.props(c.button, c.ghost, s.brand)}
           >
+            <img
+              src="/brand/tool4furry-mark.svg"
+              alt=""
+              width={24}
+              height={24}
+            />
             Tool4Furry
           </a>
           <Menu.Root>

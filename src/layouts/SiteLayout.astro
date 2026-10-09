@@ -7,19 +7,31 @@ import { tokens } from '../styles/tokens.stylex';
 import '@fontsource-variable/dm-sans/wght.css';
 import '@fontsource-variable/noto-sans-sc/wght.css';
 import '../styles/global.css';
-interface Props { title: string; description?: string; workspace?: boolean; noindex?: boolean }
-const { title, description, workspace = false, noindex = false } = Astro.props;
+import Brand from '../components/site/Brand.astro';
+interface Props { title: string; fullTitle?: string; description?: string; workspace?: boolean; noindex?: boolean }
+const { title, fullTitle, description, workspace = false, noindex = false } = Astro.props;
 const t = messages[region];
 const canonical = new URL(Astro.url.pathname, regionConfig.site);
+const resolvedTitle = fullTitle ?? `${title} · Tool4Furry`;
+const resolvedDescription = description ?? t.intro;
+const github = 'https://github.com/gofurry/tool4furry';
 ---
 <!doctype html>
 <html lang={regionConfig.lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description ?? t.intro} />
-    <title>{title} · Tool4Furry</title>
-    {!noindex && <link rel="canonical" href={canonical} />}
+    <meta name="description" content={resolvedDescription} />
+    <title>{resolvedTitle}</title>
+    <link rel="icon" type="image/svg+xml" href="/brand/tool4furry-mark.svg" />
+    {!noindex && <>
+      <link rel="canonical" href={canonical} />
+      <meta property="og:title" content={resolvedTitle} />
+      <meta property="og:description" content={resolvedDescription} />
+      <meta property="og:url" content={canonical} />
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="Tool4Furry" />
+    </>}
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     {import.meta.env.DEV && <>
       <link rel="stylesheet" href="/virtual:stylex.css" />
@@ -30,13 +42,40 @@ const canonical = new URL(Astro.url.pathname, regionConfig.site);
     <div {...stylex.attrs(s.frame)}>
       <a {...stylex.attrs(s.skip)} href="#main-content">{t.skip}</a>
       {!workspace && <header {...stylex.attrs(s.width)}>
-        <nav {...stylex.attrs(s.nav)} aria-label={t.home}>
-          <a {...stylex.attrs(s.brand)} href="/">Tool4Furry<span {...stylex.attrs(s.brandMark)} aria-hidden="true"> ↗</span></a>
-          <a {...stylex.attrs(s.link)} href="https://github.com/gofurry/tool4furry">{t.source}</a>
+        <nav {...stylex.attrs(s.nav)} aria-label={t.headerNav}>
+          <Brand />
+          <div {...stylex.attrs(s.navLinks)}>
+            <a {...stylex.attrs(s.navLink)} href="/#tools">{t.tools}</a>
+            <a {...stylex.attrs(s.navLink, s.githubLink)} href={github} aria-label="GitHub">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.86c-2.78.61-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z" />
+              </svg>
+              <span {...stylex.attrs(s.githubLabel)}>GitHub</span>
+            </a>
+          </div>
         </nav>
       </header>}
       <slot />
-      {!workspace && <footer {...stylex.attrs(s.width, s.footer)}>{t.footer}</footer>}
+      {!workspace && <footer {...stylex.attrs(s.width)}>
+        <div {...stylex.attrs(s.footer)}>
+          <div {...stylex.attrs(s.footerTop)}>
+            <div>
+              <Brand />
+              <p {...stylex.attrs(s.footerIntro)}>{t.footerIntro}</p>
+              <p {...stylex.attrs(s.ecosystem)}>{t.ecosystem}</p>
+            </div>
+            <nav aria-label={t.footerNav} {...stylex.attrs(s.footerLinks)}>
+              <a {...stylex.attrs(s.navLink)} href="/#tools">{t.tools}</a>
+              <a {...stylex.attrs(s.navLink)} href={github}>GitHub</a>
+              <a {...stylex.attrs(s.navLink)} href={`${github}/blob/main/LICENSE`}>BSD-3-Clause License</a>
+            </nav>
+          </div>
+          <div {...stylex.attrs(s.footerBottom)}>
+            <span>© {new Date().getFullYear()} Tool4Furry</span>
+            <span>{t.footer}</span>
+          </div>
+        </div>
+      </footer>}
     </div>
   </body>
 </html>

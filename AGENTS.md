@@ -1,9 +1,11 @@
 # Tool4Furry
 
-V0.3-B: shared product entry, full-viewport Canvas overlays and natural-flow Form/Batch workspaces.
+V0.3-C: static branded homepage, honest tool discovery and regional SEO; V0.3-B workbench boundaries remain intact.
 
 - Read [docs/foundation.md](docs/foundation.md) for boundaries and verified integration decisions.
 - `src/pages` + `src/layouts`: Astro SSG, site copy and published routes.
+- Read [docs/site-homepage.md](docs/site-homepage.md) for the V0.3-C contract and acceptance. Keep the homepage script/Island/JS-preload free. `section#tools` always exists; only current-region published registry entries enable cards and the hero CTA. No placeholder tools in the production registry.
+- Site header/footer and ToolPageFrame share `public/brand/tool4furry-mark.svg`; it is a replaceable geometric placeholder and the SVG favicon. Static decorative artwork stays local. `SiteLayout.fullTitle` overrides the default brand suffix only when supplied.
 - `src/workbench`: optional slots, responsive layout and panel visibility only.
 - Read [docs/workbench-appearance.md](docs/workbench-appearance.md) for the V0.3-B contract and verification. `ToolPageFrame` owns product entry/identity; Shell header is tool-local. Registry stays metadata-only and empty until real tools are published.
 - Canvas viewport geometry is independent of overlays; empty overlay layers use pointer-events:none. Inspector defaults closed; keep one stable Portal/parameter tree across the shared <=900px breakpoint. Form/Batch remain in document flow.

@@ -1,6 +1,6 @@
 # Tool4Furry
 
-为兽圈创作与日常需求准备的开源浏览器工具站。当前为 **V0.3-B — Workbench Appearance & Responsive Architecture**：统一产品入口、完整视口 Canvas 浮层与自然流 Form/Batch 工作台；沿用 Creative Studio 字体、Token 和控件，尚无正式发布的工具。
+为 Furry 创作者准备的开源浏览器工具站。当前为 **V0.3-C — Site Shell, Homepage & Tool Discovery**：静态品牌首页、诚实工具目录与双地区 SEO；保留既有 Creative Studio 控件与 Workbench，尚无正式发布的工具。
 
 前端及未来浏览器本地工具使用现有 [BSD-3-Clause](LICENSE) 协议。当前没有后端；未来 SaaS 后端将放在独立仓库。
 
@@ -19,7 +19,7 @@ pnpm dev
 
 | 路径 | 内容 |
 | --- | --- |
-| `/` | 静态首页；无正式工具时显示准备中的空状态 |
+| `/`、`/#tools` | 品牌首页与工具目录；无正式工具时显示准备中的空状态 |
 | `/lab/canvas` | 完整视口画布、浮动 Dock、默认关闭的 Inspector、手机参数 Sheet |
 | `/lab/form` | 输入、参数、校验、模拟输出 |
 | `/lab/batch` | 增删示例任务、推进模拟状态、清空 |
@@ -51,7 +51,7 @@ pnpm build:global
 | `pnpm preview` | 预览 CN 静态产物 |
 | `pnpm preview:global` | 预览 global 静态产物 |
 
-两套产物互不覆盖，每次构建都会检查语言、canonical、CSS 提取和 Lab 隔离。构建脚本用 cross-env，兼容 PowerShell。不要并发运行两次构建或与 dev 混跑，它们会使用 Vite 的同一依赖缓存。
+两套产物互不覆盖，每次构建都会检查语言、title/description/文本 OG、canonical、SVG favicon、真实工具目录与路由对应关系、首页零脚本/Island/JS preload、自托管字体及授权、StyleX CSS 提取和 Lab 隔离。构建脚本用 cross-env，兼容 PowerShell。不要并发运行两次构建或与 dev 混跑，它们会使用 Vite 的同一依赖缓存。
 
 每个输出目录都可独立作为普通 HTTP Server 的根目录，不需要 Astro 服务端。例如已安装 Python 时：
 
@@ -71,6 +71,8 @@ python -m http.server 8081 --directory dist/global
 src/
   pages/          Astro 首页、404、lab/[mode]、tools/[slug]
   layouts/        SiteLayout：品牌、语言、SEO、页面外壳
+  components/site/ 静态共用品牌组合
+  site/           Catalog 文案、类别标签与发布元数据投影
   workbench/      可选插槽、响应式、面板开关
   ui/             受控 UI 原语、Island 内的 UiProvider
   lab/            开发 demo、独立状态与纯模拟逻辑
@@ -85,6 +87,8 @@ docs/ui-primitives.md 控件 API、弹层规则和 V0.2-A 验收
 docs/file-interactions.md 文件/滚动 API、边界和 V0.2-B 验收
 docs/visual-foundation.md 自托管字体、视觉 Token、控件状态与 V0.3-A 验收
 docs/workbench-appearance.md V0.3-B 完整合同、布局所有权、浏览器与构建验收
+docs/site-homepage.md V0.3-C 完整合同、首页/目录/SEO 与验收记录
+public/brand/     可替换单一 Mark、静态 Creative Fragments SVG
 ```
 
 技术栈：Astro SSG、React、TypeScript、StyleX、Motion、Base UI、Phosphor Icons、pnpm、Vitest。没有 SSR Adapter、全局业务 Store、通用画布引擎、数据库、Docker、Monorepo、Storybook 或 Playwright 测试框架。`pnpm-workspace.yaml` 仅保存 pnpm 安装策略，不定义子项目。
@@ -102,3 +106,7 @@ GitHub Actions 对 dev/main 的 push 与 PR 执行安装、检查、测试及双
 工作台入口与响应式合同见 [Workbench Appearance](docs/workbench-appearance.md)。品牌链接返回首页，独立工具箱按钮只展示当前地区已发布工具（目前为空）；烧瓶按钮收纳五个 DEV ONLY 预览。Canvas 的选择/标记属于当前 Demo 的局部操作；点击未被浮层覆盖的画布同样生效。
 
 人工重点复核 `/lab/canvas` 在 901/900px 切换、390px 竖屏及 812×375 横屏：打开参数前后画布不缩小，名称/大小/颜色/计数保留，Select → Sheet 两次 Escape 依次关闭且返回焦点。Form/Batch 手机依次阅读输入/执行/结果或队列/设置。内置 Chromium 验收属于视口模拟；真实 iOS/Android 的软键盘、触摸、安全区与辅助技术仍需人工检查。
+
+首页合同与实际验收见 [Site Homepage](docs/site-homepage.md)。Header/Footer 的「工具箱」均返回 `/#tools`；导航无吸顶或汉堡菜单。首页不加载 React 或动画运行时，品牌 Mark 与 favicon 共用一个可替换 SVG，Hero 只用本地静态矢量。当前没有探索主 CTA、搜索框或假工具卡；未来 Registry 中当前地区的真实 `published` 工具会自动进入 Editorial Grid。未知类别安全省略标签，工具实现仍遵守既有加载与发布流程。SEO 仅提供文本 OG，本轮没有分享图。
+
+人工审查首页时重点看中英标题换行、320px 导航、手机图形与目录距离、Tab 焦点及 Footer；从 404 的「工具箱」链接确认能返回目录。真实移动设备与屏幕阅读器验收仍待维护者完成。

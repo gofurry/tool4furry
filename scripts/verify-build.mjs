@@ -32,6 +32,134 @@ assert.equal(
   document.querySelector('link[rel="canonical"]')?.getAttribute('href'),
   site,
 );
+const expectedTitle =
+  region === 'cn'
+    ? 'Tool4Furry — Furry 创作者的浏览器工具箱'
+    : 'Tool4Furry — Browser Tools for Furry Creators';
+const expectedDescription =
+  region === 'cn'
+    ? 'Tool4Furry 正在为 Furry 创作者打造轻巧的浏览器工具箱，涵盖创作、素材处理与日常效率。首批工具开发中。'
+    : 'Tool4Furry is building browser-based tools for furry creators, focused on creative tasks, assets and everyday productivity. Tools are on the way.';
+assert.equal(
+  document.title,
+  expectedTitle,
+  'Homepage title must not repeat the brand',
+);
+assert.equal(
+  document.querySelector('meta[name="description"]')?.content,
+  expectedDescription,
+);
+for (const [property, expected] of Object.entries({
+  'og:title': expectedTitle,
+  'og:description': expectedDescription,
+  'og:url': site,
+  'og:type': 'website',
+  'og:site_name': 'Tool4Furry',
+})) {
+  const tags = document.querySelectorAll(`meta[property="${property}"]`);
+  assert.equal(tags.length, 1, `Exactly one ${property}`);
+  assert.equal(tags[0].content, expected);
+}
+assert.equal(
+  document.querySelectorAll('meta[property="og:image"]').length,
+  0,
+  'No invented share image',
+);
+assert.equal(document.querySelectorAll('h1').length, 1);
+assert.equal(
+  document.querySelector('h1')?.textContent.trim().replace(/\s+/g, ' '),
+  region === 'cn'
+    ? '灵感尽情发挥。繁琐留给工具。'
+    : 'More room for imagination. Less time on the tedious bits.',
+);
+assert(document.querySelector('main#main-content'), 'Missing skip-link target');
+assert.equal(
+  document.querySelector('a[href="#main-content"]')?.textContent.trim(),
+  region === 'cn' ? '跳到主要内容' : 'Skip to content',
+);
+const catalog = document.querySelector(
+  'section#tools[aria-labelledby="tools-heading"]',
+);
+assert(
+  catalog?.querySelector('h2#tools-heading'),
+  'The toolbox anchor and heading must always exist',
+);
+assert.equal(
+  document.querySelectorAll('input[type="search"], [role="search"]').length,
+  0,
+  'No empty search UI',
+);
+const github = 'https://github.com/gofurry/tool4furry';
+const mark = '/brand/tool4furry-mark.svg';
+for (const tag of ['header', 'footer']) {
+  const shell = document.querySelector(tag);
+  assert(
+    shell?.querySelector('a[href="/#tools"]'),
+    `${tag}: missing cross-page toolbox link`,
+  );
+  assert(
+    shell.querySelector(`a[href="${github}"]`),
+    `${tag}: missing real GitHub link`,
+  );
+  const brand = shell.querySelector('a[href="/"]');
+  assert.equal(brand?.textContent.trim(), 'Tool4Furry');
+  assert.equal(brand.querySelector('img')?.getAttribute('src'), mark);
+  assert.equal(brand.querySelector('img')?.getAttribute('alt'), '');
+}
+assert(
+  document.querySelector(`footer a[href="${github}/blob/main/LICENSE"]`),
+  'Missing real license link',
+);
+assert(
+  document
+    .querySelector('footer')
+    ?.textContent.includes(
+      region === 'cn'
+        ? '前端开源 · 浏览器本地处理优先'
+        : 'Open-source frontend · Local processing first',
+    ),
+);
+assert.equal(
+  document
+    .querySelector('link[rel="icon"][type="image/svg+xml"]')
+    ?.getAttribute('href'),
+  mark,
+);
+for (const path of [mark, '/brand/creative-fragments.svg']) {
+  const svg = await readFile(resolve(root, path.slice(1)), 'utf8');
+  const asset = new JSDOM(svg, { contentType: 'image/svg+xml' }).window
+    .document;
+  assert(
+    asset.documentElement.hasAttribute('viewBox'),
+    `${path}: missing viewBox`,
+  );
+  assert.equal(
+    asset.querySelectorAll(
+      'script, foreignObject, image, animate, animateTransform',
+    ).length,
+    0,
+    `${path}: must be a static local vector`,
+  );
+  assert(
+    !/\son\w+\s*=|(?:href|url)\s*[(=]/i.test(svg),
+    `${path}: external resources or event handlers`,
+  );
+}
+for (const image of document.querySelectorAll('img')) {
+  assert(
+    image.getAttribute('src')?.startsWith('/brand/'),
+    'Homepage images must be local brand assets',
+  );
+  assert.equal(
+    image.getAttribute('alt'),
+    '',
+    'Decorative art must have empty alt',
+  );
+  assert(
+    image.hasAttribute('width') && image.hasAttribute('height'),
+    'Reserve image geometry',
+  );
+}
 assert.equal(
   document.querySelectorAll('astro-island, script').length,
   0,
@@ -59,6 +187,47 @@ if (toolLinks.size === 0)
     home.includes(region === 'cn' ? '工具正在准备中' : 'Tools are on the way'),
     'Wrong empty state copy',
   );
+assert.equal(
+  catalog.querySelectorAll('[data-catalog-empty]').length,
+  toolLinks.size === 0 ? 1 : 0,
+);
+assert.equal(
+  document.querySelectorAll('a[href="#tools"]').length,
+  toolLinks.size === 0 ? 0 : 1,
+  'Only published tools may enable the hero CTA',
+);
+const cards = [...catalog.querySelectorAll('ul > li > a[data-tool-card]')];
+assert.equal(
+  cards.length,
+  toolLinks.size,
+  'Every tool link must be a whole catalog card',
+);
+assert.equal(
+  new Set(cards.map((card) => card.dataset.toolCard)).size,
+  cards.length,
+  'Duplicate catalog tool IDs',
+);
+for (const card of cards) {
+  const href = card.getAttribute('href');
+  assert(
+    /^\/tools\/[a-z0-9-]+\/$/.test(href),
+    `Invalid real tool route: ${href}`,
+  );
+  assert(
+    htmlFiles.includes(`${href.slice(1)}index.html`),
+    `Catalog link has no generated tool page: ${href}`,
+  );
+  assert(card.querySelector('h3')?.textContent.trim(), 'Missing tool title');
+  assert(
+    card.querySelector('p')?.textContent.trim(),
+    'Missing tool description',
+  );
+  assert.equal(
+    card.querySelectorAll('a, button, input').length,
+    0,
+    'No nested interactive card controls',
+  );
+}
 for (const page of htmlFiles.filter((file) => file.startsWith('tools/'))) {
   assert(
     toolLinks.has('/' + page.replace(/index\.html$/, '')),
@@ -71,6 +240,27 @@ for (const page of htmlFiles) {
   const content = await readFile(resolve(root, page), 'utf8');
   assert(!content.includes('virtual:stylex'), `Dev StyleX runtime in ${page}`);
   const dom = new JSDOM(content).window.document;
+  assert.equal(
+    dom.querySelector('link[rel="icon"]')?.getAttribute('href'),
+    mark,
+    `Shared favicon missing: ${page}`,
+  );
+  if (page === '404.html') {
+    assert.equal(
+      dom.querySelector('meta[name="robots"]')?.content,
+      'noindex, nofollow',
+    );
+    assert.equal(dom.querySelectorAll('link[rel="canonical"]').length, 0);
+    assert.equal(
+      dom.title,
+      '404 · Tool4Furry',
+      'Preserve the default title API',
+    );
+    assert(
+      dom.querySelector('header a[href="/#tools"]'),
+      '404 toolbox navigation must return to the home catalog',
+    );
+  }
   const stylesheets = [...dom.querySelectorAll('link[rel="stylesheet"]')];
   assert(stylesheets.length > 0, `Missing extracted CSS in ${page}`);
   const linkedCSS = [];
@@ -170,5 +360,5 @@ for (const file of files.filter((file) => file.endsWith('.js'))) {
 }
 assert((await stat(root)).isDirectory());
 console.log(
-  `Verified ${region}: ${htmlFiles.length} static pages, extracted StyleX CSS, ${fontAssets.size} local WOFF2 assets + ${inlineFonts.size} embedded subsets, correct locale/canonical, no Lab routes or demo implementation.`,
+  `Verified ${region}: ${htmlFiles.length} static pages, zero-script homepage, SEO/OG/favicon, ${cards.length} real catalog cards, extracted StyleX CSS, ${fontAssets.size} local WOFF2 assets + ${inlineFonts.size} embedded subsets, correct locale/canonical, no Lab routes or demo implementation.`,
 );
