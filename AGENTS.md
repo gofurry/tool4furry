@@ -1,23 +1,24 @@
 # Tool4Furry
 
-V0.4-A: taxonomy, full catalog, static tool SEO and session-local processing contracts; no real image tools published yet.
+V0.4-B: a real Image Converter draft, with no published tools yet. Read [docs/image-converter-implementation.md](docs/image-converter-implementation.md) for ownership, verification and release blockers. The user-supplied full contract is an attachment, not a required repository file.
 
 - Read [docs/foundation.md](docs/foundation.md) for boundaries and verified integration decisions.
 - `src/pages` + `src/layouts`: Astro SSG, site copy and published routes.
 - Read [docs/site-homepage.md](docs/site-homepage.md) for the V0.3-C contract and acceptance. Keep the homepage script/Island/JS-preload free. `section#tools` always exists; only current-region published registry entries enable cards and the hero CTA. No placeholder tools in the production registry.
 - Read [docs/tool-platform-image-foundation.md](docs/tool-platform-image-foundation.md) for V0.4-A. Taxonomy is owned by `src/site/taxonomy.ts`; Registry remains the publication gate. Homepage has <=9 curated tools, `/tools/` covers all, Switcher has <=6 shortcuts plus the full catalog. Header/Footer/404 toolbox links now use `/tools/`; keep the historical home `#tools` anchor.
 - Published metadata must pass `assertValidRegistry` and have regional Astro-only content in `src/site/tool-content.ts`. ToolRuntime accepts a static intro slot: formal pages have one Astro H1; Lab keeps its heading and Canvas overlay behavior. Never import long tool content into React.
-- `processing-state.ts` is a pure per-tool version contract, not a scheduler/store. Callers own settings validation, equality, real output verification and disposal of rejected/obsolete resources. Do not implement B/C/D image tools in A.
+- `processing-state.ts` is a pure per-tool version contract, not a scheduler/store. Callers own settings validation, equality, real output verification and disposal of rejected/obsolete resources. Converter owns a bounded serial lane and two-phase candidate selection; naming/mode changes never re-encode. Resizer/Cropper remain out of scope.
 - Capability evidence and remaining browser/device release gates: [docs/image-processing-capabilities.md](docs/image-processing-capabilities.md). `scripts/spikes` and `tests/fixtures` are never production resources; isolated fixture builds go outside the repository dist.
 - Site header/footer and ToolPageFrame share `public/brand/tool4furry-mark.svg`; it is a replaceable geometric placeholder and the SVG favicon. Static decorative artwork stays local. `SiteLayout.fullTitle` overrides the default brand suffix only when supplied.
 - `src/workbench`: optional slots, responsive layout and panel visibility only.
-- Read [docs/workbench-appearance.md](docs/workbench-appearance.md) for the V0.3-B contract and verification. `ToolPageFrame` owns product entry/identity; Shell header is tool-local. Registry stays metadata-only and empty until real tools are published.
+- Read [docs/workbench-appearance.md](docs/workbench-appearance.md) for the V0.3-B contract and verification. `ToolPageFrame` owns product entry/identity; Shell header is tool-local. Registry stays metadata-only; draft metadata must not enter published discovery.
 - Canvas viewport geometry is independent of overlays; empty overlay layers use pointer-events:none. Inspector defaults closed; keep one stable Portal/parameter tree across the shared <=900px breakpoint. Form/Batch remain in document flow.
 - `src/ui`: controlled primitives; read [docs/ui-primitives.md](docs/ui-primitives.md). Providers belong in fixed Lab/Tool React roots, never the static SiteLayout.
 - FileDropzone delivers File references and metadata validation only; no reads, uploads, object URLs or persistence. Queues belong to callers. See [docs/file-interactions.md](docs/file-interactions.md).
 - ScrollDock is opt-in document scrolling, currently only in FilesLab. Never mount it globally or control Canvas/internal panels. Preserve native scrolling.
 - `src/tools/registry.ts`: metadata only; `loaders.ts`: separate lazy implementations.
 - `src/lab`: development demos; never register them as published tools.
+- `/preview/[slug]` is a separate DEV-only real-tool preview (one fixed ToolRuntime root). The draft Converter loader uses a direct `import.meta.env.DEV` guard so its implementation is absent from production. Do not promote it or remove that guard without completing browser/device/resource release gates.
 - `src/config/region.ts`: region/domain contract; `src/i18n/messages.ts`: CN/English copy.
 - Preserve LICENSE. Work on dev; do not merge main or deploy without a request.
 - Use StyleX, with global CSS limited to reset and HTML basics. No old React Babel configuration.

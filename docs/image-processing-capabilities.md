@@ -48,3 +48,6 @@ PNG/WebP 的半透明蓝色像素均为 [0,0,255,128]；JPEG 白底合成后为 
 ## 官方依据与实测的区别
 
 [toBlob](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob) 描述目标格式不支持时可回退 PNG，因此探测核对实际 Blob.type；[createImageBitmap](https://developer.mozilla.org/en-US/docs/Web/API/Window/createImageBitmap) 用于实际解码，不能以浏览器能显示某格式推定其可编码。[ImageBitmap.close](https://developer.mozilla.org/en-US/docs/Web/API/ImageBitmap/close) 与 [URL.revokeObjectURL](https://developer.mozilla.org/en-US/docs/Web/API/URL/revokeObjectURL_static) 分别负责资源释放。[Canvas 尺寸说明](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/canvas#maximum_canvas_size) 提醒上限随环境变化。以上规范说明不是未测设备的通过证据。
+## V0.4-B 补充证据（2026-10-10）
+
+以上 A 阶段事实保持不变。B 已新增真实 Converter 草稿及结构/动画/EXIF 1–8、透明度、下载、连续处理和资源所有权验证；详见 [Image Converter 实施记录](image-converter-implementation.md) 与 `docs/evidence/converter-v04b/`。本次仍只实际访问 Windows Chromium 155，不能把桌面窄视口写成手机验收。16MP 与 8192px 样本通过不等于全设备安全上限；20 MiB/16MP/8192px 仍是开发保护候选。Firefox、Safari/WebKit、iOS/Android 真机发布门禁未完成，Registry 保持 draft，正式目录仍无工具。

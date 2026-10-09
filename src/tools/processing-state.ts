@@ -104,6 +104,14 @@ export function restoreRecommended<S, R>(
 ) {
   return updateSettings(state, state.preset.settings, equal);
 }
+// Change the comparison baseline without resetting effective parameters or versions.
+// A caller can then restoreRecommended() or updateSettings() with remembered values.
+export function setRecommendedPreset<S, R>(
+  state: ProcessingState<S, R>,
+  preset: Preset<S>,
+): ProcessingState<S, R> {
+  return { ...state, preset: structuredClone(preset) };
+}
 export function beginRequest<S, R>(
   state: ProcessingState<S, R>,
 ): ProcessingState<S, R> {
@@ -192,13 +200,14 @@ export function shouldAutoProcess(
   return (
     mode === 'quick' &&
     validated &&
-    event ===
-      (
-        {
-          converter: 'source-ready',
-          resizer: 'preset-selected',
-          cropper: 'crop-confirmed',
-        } as const
-      )[tool]
+    ((tool === 'converter' && event === 'preset-selected') ||
+      event ===
+        (
+          {
+            converter: 'source-ready',
+            resizer: 'preset-selected',
+            cropper: 'crop-confirmed',
+          } as const
+        )[tool])
   );
 }

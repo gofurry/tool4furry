@@ -138,6 +138,9 @@ describe('Quick/Advanced and output validity', () => {
     expect(shouldAutoProcess('converter', 'quick', 'source-ready', true)).toBe(
       true,
     );
+    expect(shouldAutoProcess('converter', 'quick', 'preset-selected', true)).toBe(true);
+    expect(shouldAutoProcess('converter', 'advanced', 'preset-selected', true)).toBe(false);
+    expect(shouldAutoProcess('converter', 'quick', 'preset-selected', false)).toBe(false);
     expect(shouldAutoProcess('resizer', 'quick', 'source-ready', true)).toBe(
       false,
     );

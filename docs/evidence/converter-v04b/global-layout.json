@@ -1,0 +1,173 @@
+[
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/41bbb287-74ef-42f2-8b8d-f29afdaa43a8",
+    "h1": 1,
+    "lang": "en",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "scrollWidth": 1425,
+    "settings": 1,
+    "size": [
+      1440,
+      900
+    ],
+    "width": 1425
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/41bbb287-74ef-42f2-8b8d-f29afdaa43a8",
+    "h1": 1,
+    "lang": "en",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "scrollWidth": 1009,
+    "settings": 1,
+    "size": [
+      1024,
+      768
+    ],
+    "width": 1009
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/41bbb287-74ef-42f2-8b8d-f29afdaa43a8",
+    "h1": 1,
+    "lang": "en",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "scrollWidth": 886,
+    "settings": 1,
+    "size": [
+      901,
+      600
+    ],
+    "width": 886
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/41bbb287-74ef-42f2-8b8d-f29afdaa43a8",
+    "h1": 1,
+    "lang": "en",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "scrollWidth": 885,
+    "settings": 1,
+    "size": [
+      900,
+      600
+    ],
+    "width": 885
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/41bbb287-74ef-42f2-8b8d-f29afdaa43a8",
+    "h1": 1,
+    "lang": "en",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "scrollWidth": 753,
+    "settings": 1,
+    "size": [
+      768,
+      1024
+    ],
+    "width": 753
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/41bbb287-74ef-42f2-8b8d-f29afdaa43a8",
+    "h1": 1,
+    "lang": "en",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "scrollWidth": 375,
+    "settings": 1,
+    "size": [
+      390,
+      844
+    ],
+    "width": 375
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/41bbb287-74ef-42f2-8b8d-f29afdaa43a8",
+    "h1": 1,
+    "lang": "en",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "scrollWidth": 360,
+    "settings": 1,
+    "size": [
+      375,
+      812
+    ],
+    "width": 360
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/41bbb287-74ef-42f2-8b8d-f29afdaa43a8",
+    "h1": 1,
+    "lang": "en",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "scrollWidth": 305,
+    "settings": 1,
+    "size": [
+      320,
+      568
+    ],
+    "width": 305
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/41bbb287-74ef-42f2-8b8d-f29afdaa43a8",
+    "h1": 1,
+    "lang": "en",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "scrollWidth": 797,
+    "settings": 1,
+    "size": [
+      812,
+      375
+    ],
+    "width": 797
+  }
+]

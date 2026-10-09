@@ -3,7 +3,7 @@ import type { Region } from '../config/region';
 import { messages } from '../i18n/messages';
 import { toolLoaders } from './loaders';
 import { UiProvider } from '../ui/UiProvider';
-import { getPublishedTools } from './registry';
+import { getPublishedTools, tools } from './registry';
 import ToolPageFrame from './ToolPageFrame';
 import * as stylex from '@stylexjs/stylex';
 import { tokens } from '../styles/tokens.stylex';
@@ -23,15 +23,19 @@ export default function ToolRuntime({
   toolId,
   region,
   intro,
+  preview = false,
 }: {
   toolId: string;
   region: Region;
   intro?: ReactNode;
+  preview?: boolean;
 }) {
   const t = messages[region];
-  const definition = getPublishedTools(region).find(
-    (tool) => tool.id === toolId,
-  );
+  const definition = (
+    import.meta.env.DEV && preview
+      ? tools.filter((tool) => tool.regions.includes(region))
+      : getPublishedTools(region)
+  ).find((tool) => tool.id === toolId);
   const Tool = useMemo(() => {
     const loader = toolLoaders[toolId];
     return loader ? lazy(loader) : null;

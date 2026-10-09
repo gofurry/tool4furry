@@ -5,6 +5,7 @@ import ToolPageFrame from '../src/tools/ToolPageFrame';
 import WorkbenchLab from '../src/lab/WorkbenchLab';
 import { UiProvider } from '../src/ui/UiProvider';
 import * as registry from '../src/tools/registry';
+import { imageConverterDefinition } from '../src/tools/image-converter/definition';
 import type { ToolDefinition } from '../src/tools/types';
 import { messages } from '../src/i18n/messages';
 import { setViewport } from './setup';
@@ -110,7 +111,10 @@ describe('product navigation', () => {
     expect(screen.queryByText('draft')).toBeNull();
     expect(screen.queryByText('overseas')).toBeNull();
     expect(published).toHaveBeenCalledWith('cn');
-    expect(registry.tools).toEqual([]); // Fixtures never populate the real registry.
+    expect(registry.tools).toEqual([imageConverterDefinition]); // Fixtures never populate the real registry.
+    expect(imageConverterDefinition.status).toBe('draft');
+    expect(original('cn')).toEqual([]);
+    expect(original('global')).toEqual([]);
   });
 
   it('separates DEV navigation from the toolbox and local canvas actions', async () => {

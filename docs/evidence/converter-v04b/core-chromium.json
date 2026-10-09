@@ -1,0 +1,890 @@
+{
+  "timestamp": "2026-10-09T16:40:05.688Z",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+  "rows": [
+    {
+      "capabilities": {
+        "webp": {
+          "supported": true
+        },
+        "jpeg": {
+          "supported": true
+        },
+        "png": {
+          "supported": true
+        }
+      }
+    },
+    {
+      "name": "transparent.png",
+      "format": "webp",
+      "mime": "image/webp",
+      "bytes": 660,
+      "ms": 3,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          238,
+          22,
+          20,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          20,
+          20,
+          237,
+          128
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "name": "transparent.png",
+      "format": "jpeg",
+      "mime": "image/jpeg",
+      "bytes": 949,
+      "ms": 2,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          137,
+          137,
+          247,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ]
+    },
+    {
+      "name": "transparent.png",
+      "format": "png",
+      "mime": "image/png",
+      "bytes": 275,
+      "ms": 2,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          20,
+          220,
+          20,
+          255
+        ],
+        [
+          20,
+          20,
+          239,
+          128
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "name": "static.jpg",
+      "format": "webp",
+      "mime": "image/webp",
+      "bytes": 676,
+      "ms": 2,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          238,
+          22,
+          20,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          139,
+          137,
+          245,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ]
+    },
+    {
+      "name": "static.jpg",
+      "format": "jpeg",
+      "mime": "image/jpeg",
+      "bytes": 991,
+      "ms": 2,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          137,
+          137,
+          247,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ]
+    },
+    {
+      "name": "static.jpg",
+      "format": "png",
+      "mime": "image/png",
+      "bytes": 964,
+      "ms": 2,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          137,
+          137,
+          247,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ]
+    },
+    {
+      "name": "progressive.jpg",
+      "format": "webp",
+      "mime": "image/webp",
+      "bytes": 676,
+      "ms": 2,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          238,
+          22,
+          20,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          139,
+          137,
+          245,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ]
+    },
+    {
+      "name": "progressive.jpg",
+      "format": "jpeg",
+      "mime": "image/jpeg",
+      "bytes": 991,
+      "ms": 2,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          137,
+          137,
+          247,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ]
+    },
+    {
+      "name": "progressive.jpg",
+      "format": "png",
+      "mime": "image/png",
+      "bytes": 964,
+      "ms": 2,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          137,
+          137,
+          247,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ]
+    },
+    {
+      "name": "static.webp",
+      "format": "webp",
+      "mime": "image/webp",
+      "bytes": 660,
+      "ms": 3,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          238,
+          22,
+          20,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          20,
+          20,
+          237,
+          128
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "name": "static.webp",
+      "format": "jpeg",
+      "mime": "image/jpeg",
+      "bytes": 949,
+      "ms": 2,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          137,
+          137,
+          247,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ]
+    },
+    {
+      "name": "static.webp",
+      "format": "png",
+      "mime": "image/png",
+      "bytes": 275,
+      "ms": 2,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          20,
+          220,
+          20,
+          255
+        ],
+        [
+          20,
+          20,
+          239,
+          128
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "name": "wrong-extension.jpg",
+      "format": "webp",
+      "mime": "image/webp",
+      "bytes": 660,
+      "ms": 3,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          238,
+          22,
+          20,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          20,
+          20,
+          237,
+          128
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "name": "wrong-extension.jpg",
+      "format": "jpeg",
+      "mime": "image/jpeg",
+      "bytes": 949,
+      "ms": 2,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          137,
+          137,
+          247,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ]
+    },
+    {
+      "name": "wrong-extension.jpg",
+      "format": "png",
+      "mime": "image/png",
+      "bytes": 275,
+      "ms": 2,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          20,
+          220,
+          20,
+          255
+        ],
+        [
+          20,
+          20,
+          239,
+          128
+        ],
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "orientation": 1,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          137,
+          137,
+          247,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "orientation": 2,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          137,
+          137,
+          247,
+          255
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "orientation": 3,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          137,
+          137,
+          247,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          240,
+          20,
+          20,
+          255
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "orientation": 4,
+      "dimensions": [
+        80,
+        48
+      ],
+      "pixels": [
+        [
+          137,
+          137,
+          247,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "orientation": 5,
+      "dimensions": [
+        48,
+        80
+      ],
+      "pixels": [
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          137,
+          137,
+          247,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "orientation": 6,
+      "dimensions": [
+        48,
+        80
+      ],
+      "pixels": [
+        [
+          137,
+          137,
+          247,
+          255
+        ],
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "orientation": 7,
+      "dimensions": [
+        48,
+        80
+      ],
+      "pixels": [
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          137,
+          137,
+          247,
+          255
+        ],
+        [
+          240,
+          20,
+          20,
+          255
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "orientation": 8,
+      "dimensions": [
+        48,
+        80
+      ],
+      "pixels": [
+        [
+          19,
+          220,
+          20,
+          255
+        ],
+        [
+          255,
+          255,
+          255,
+          255
+        ],
+        [
+          240,
+          20,
+          20,
+          255
+        ],
+        [
+          137,
+          137,
+          247,
+          255
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "name": "animated.png",
+      "rejected": "animated"
+    },
+    {
+      "name": "animated.webp",
+      "rejected": "animated"
+    },
+    {
+      "name": "truncated.png",
+      "rejected": "corrupt"
+    },
+    {
+      "name": "unsupported.gif",
+      "rejected": "unsupported"
+    },
+    {
+      "name": "empty.png",
+      "rejected": "empty"
+    },
+    {
+      "name": "over-edge.png",
+      "rejected": "dimensions"
+    },
+    {
+      "name": "over-pixels.png",
+      "rejected": "dimensions"
+    },
+    {
+      "fallback": {
+        "requested": "image/x-unsupported",
+        "actual": "image/png",
+        "bytes": 88
+      }
+    }
+  ],
+  "resources": {
+    "bitmapsCreated": 85,
+    "bitmapsClosed": 85,
+    "canvasesCreated": 50,
+    "canvasesReleased": 50,
+    "urlsCreated": 0,
+    "urlsRevoked": 0
+  },
+  "error": ""
+}

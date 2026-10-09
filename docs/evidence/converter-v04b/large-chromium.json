@@ -1,0 +1,171 @@
+{
+  "timestamp": "2026-10-09T17:03:17.003Z",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+  "rows": [
+    {
+      "name": "wild-cherry.jpg",
+      "inputBytes": 257056,
+      "dimensions": [
+        1024,
+        772
+      ],
+      "format": "webp",
+      "mime": "image/webp",
+      "outputBytes": 261150,
+      "decodeMs": 8,
+      "encodeAndVerifyMs": 113
+    },
+    {
+      "name": "wild-cherry.jpg",
+      "inputBytes": 257056,
+      "dimensions": [
+        1024,
+        772
+      ],
+      "format": "jpeg",
+      "mime": "image/jpeg",
+      "outputBytes": 289585,
+      "decodeMs": 8,
+      "encodeAndVerifyMs": 24
+    },
+    {
+      "name": "wild-cherry.jpg",
+      "inputBytes": 257056,
+      "dimensions": [
+        1024,
+        772
+      ],
+      "format": "png",
+      "mime": "image/png",
+      "outputBytes": 1948726,
+      "decodeMs": 8,
+      "encodeAndVerifyMs": 261
+    },
+    {
+      "name": "budget-4000.png",
+      "inputBytes": 56255,
+      "dimensions": [
+        4000,
+        4000
+      ],
+      "format": "webp",
+      "mime": "image/webp",
+      "outputBytes": 29010,
+      "decodeMs": 45,
+      "encodeAndVerifyMs": 732
+    },
+    {
+      "name": "budget-4000.png",
+      "inputBytes": 56255,
+      "dimensions": [
+        4000,
+        4000
+      ],
+      "format": "jpeg",
+      "mime": "image/jpeg",
+      "outputBytes": 94511,
+      "decodeMs": 45,
+      "encodeAndVerifyMs": 202
+    },
+    {
+      "name": "budget-4000.png",
+      "inputBytes": 56255,
+      "dimensions": [
+        4000,
+        4000
+      ],
+      "format": "png",
+      "mime": "image/png",
+      "outputBytes": 316991,
+      "decodeMs": 45,
+      "encodeAndVerifyMs": 227
+    },
+    {
+      "name": "edge-8192.png",
+      "inputBytes": 1779,
+      "dimensions": [
+        8192,
+        64
+      ],
+      "format": "webp",
+      "mime": "image/webp",
+      "outputBytes": 1496,
+      "decodeMs": 2,
+      "encodeAndVerifyMs": 26
+    },
+    {
+      "name": "edge-8192.png",
+      "inputBytes": 1779,
+      "dimensions": [
+        8192,
+        64
+      ],
+      "format": "jpeg",
+      "mime": "image/jpeg",
+      "outputBytes": 3833,
+      "decodeMs": 2,
+      "encodeAndVerifyMs": 9
+    },
+    {
+      "name": "edge-8192.png",
+      "inputBytes": 1779,
+      "dimensions": [
+        8192,
+        64
+      ],
+      "format": "png",
+      "mime": "image/png",
+      "outputBytes": 10172,
+      "decodeMs": 2,
+      "encodeAndVerifyMs": 10
+    },
+    {
+      "name": "noise-4000.jpg",
+      "inputBytes": 10679706,
+      "dimensions": [
+        4000,
+        4000
+      ],
+      "format": "webp",
+      "mime": "image/webp",
+      "outputBytes": 11285262,
+      "decodeMs": 200,
+      "encodeAndVerifyMs": 3265
+    },
+    {
+      "name": "noise-4000.jpg",
+      "inputBytes": 10679706,
+      "dimensions": [
+        4000,
+        4000
+      ],
+      "format": "jpeg",
+      "mime": "image/jpeg",
+      "outputBytes": 11030543,
+      "decodeMs": 200,
+      "encodeAndVerifyMs": 611
+    },
+    {
+      "name": "noise-4000.jpg",
+      "inputBytes": 10679706,
+      "dimensions": [
+        4000,
+        4000
+      ],
+      "format": "png",
+      "mime": "image/png",
+      "outputBytes": 54523000,
+      "decodeMs": 200,
+      "encodeAndVerifyMs": 7058
+    }
+  ],
+  "resources": {
+    "bitmapsCreated": 28,
+    "bitmapsClosed": 28,
+    "canvasesCreated": 12,
+    "canvasesReleased": 12,
+    "urlsCreated": 0,
+    "urlsRevoked": 0
+  },
+  "error": ""
+}

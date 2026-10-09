@@ -29,6 +29,7 @@ export interface WorkbenchShellProps {
   right?: ReactNode;
   bottom?: ReactNode;
   children: ReactNode;
+  formWidth?: 'default' | 'wide';
 }
 
 export default function WorkbenchShell({
@@ -39,6 +40,7 @@ export default function WorkbenchShell({
   right,
   bottom,
   children,
+  formWidth = 'default',
 }: WorkbenchShellProps) {
   const canvas = mode === 'canvas';
   const compact = useCompact();
@@ -62,6 +64,7 @@ export default function WorkbenchShell({
           {...stylex.props(
             s.flow,
             mode === 'form' ? s.form : mode === 'batch' ? s.batch : s.custom,
+            mode === 'form' && formWidth === 'wide' && s.formWide,
             right != null && mode === 'form' && s.formColumns,
             right != null && mode === 'batch' && s.batchColumns,
           )}
@@ -352,6 +355,7 @@ const s = stylex.create({
     alignItems: 'start',
   },
   form: { maxWidth: 760 },
+  formWide: { maxWidth: 1120 },
   batch: { maxWidth: 1280 },
   formColumns: {
     maxWidth: 1120,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { domains, groups } from '../src/site/taxonomy';
-import { tools } from '../src/tools/registry';
+import { tools, getPublishedTools } from '../src/tools/registry';
 import { toolLoaders } from '../src/tools/loaders';
 import {
   assertValidRegistry,
@@ -28,7 +28,11 @@ describe('publication metadata gate', () => {
       },
     });
     expect(() => assertValidRegistry(tools, toolLoaders)).not.toThrow();
-    expect(tools).toEqual([]);
+    expect(tools.map((tool) => [tool.id, tool.status])).toEqual([
+      ['image-converter', 'draft'],
+    ]);
+    expect(getPublishedTools('cn')).toEqual([]);
+    expect(getPublishedTools('global')).toEqual([]);
   });
   it.each([0, 3, 20, 100])(
     'validates %i test-only tools without registering them',
@@ -40,7 +44,11 @@ describe('publication metadata gate', () => {
             )
           : fixtureTools(count);
       expect(registryIssues(list, fixtureLoaders(list))).toEqual([]);
-      expect(tools).toEqual([]);
+      expect(tools.map((tool) => [tool.id, tool.status])).toEqual([
+        ['image-converter', 'draft'],
+      ]);
+      expect(getPublishedTools('cn')).toEqual([]);
+      expect(getPublishedTools('global')).toEqual([]);
     },
   );
   it.each([

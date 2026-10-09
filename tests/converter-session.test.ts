@@ -1,0 +1,296 @@
+// @vitest-environment node
+import { describe, expect, it, vi } from 'vitest';
+import {
+  ConverterSession,
+  type ConverterServices,
+} from '../src/tools/image-converter/session';
+import {
+  recommendations,
+  sameSettings,
+} from '../src/tools/image-converter/presets';
+import { downloadName } from '../src/tools/image-converter/filename';
+import {
+  createProcessingState,
+  setRecommendedPreset,
+  restoreRecommended,
+  updateSettings,
+} from '../src/tools/processing-state';
+import { ImageFailure, type ImageSource } from '../src/tools/image/types';
+import { SerialJobs } from '../src/tools/image-converter/serial-jobs';
+const capabilities = {
+  png: { supported: true },
+  jpeg: { supported: true },
+  webp: { supported: true },
+};
+const tick = async () => {
+  for (let i = 0; i < 16; i++) await Promise.resolve();
+};
+const deferred = <T>() => {
+  let resolve!: (value: T) => void;
+  let reject!: (reason: unknown) => void;
+  const promise = new Promise<T>((a, b) => {
+    resolve = a;
+    reject = b;
+  });
+  return { promise, resolve, reject };
+};
+const source = (file = new File(['original'], 'art.png')): ImageSource => ({
+  file,
+  blob: file,
+  info: { format: 'png', width: 2, height: 2, orientation: 1 },
+  width: 2,
+  height: 2,
+});
+function setup(overrides: Partial<ConverterServices> = {}) {
+  const encode = vi.fn(
+    async () => new Blob(['encoded'], { type: 'image/webp' }),
+  );
+  const session = new ConverterSession(() => {}, {
+    accept: async (file) => source(file),
+    encode,
+    capabilities: async () => capabilities,
+    ...overrides,
+  });
+  session.start();
+  return { session, encode };
+}
+async function ready() {
+  const s = setup();
+  await tick();
+  s.session.select(source().file);
+  await tick();
+  return s;
+}
+describe('converter state and scheduling', () => {
+  it('auto generates once, keeps mode changes and naming outside encoding versions', async () => {
+    const { session, encode } = await ready();
+    expect(encode).toHaveBeenCalledTimes(1);
+    const state = session.snapshot.processing;
+    session.name('new-name');
+    session.mode('advanced');
+    session.mode('quick');
+    session.format('webp');
+    await tick();
+    expect(encode).toHaveBeenCalledTimes(1);
+    expect(session.snapshot.processing.requestId).toBe(state.requestId);
+    expect(session.download()).toBe(state.result?.value);
+    session.dispose();
+  });
+  it('remembers per-format preferences and restores the CURRENT format', async () => {
+    const { session } = await ready();
+    session.mode('advanced');
+    session.format('jpeg');
+    session.settings({
+      ...session.snapshot.processing.settings,
+      quality: 95,
+      jpegBackground: '#AABBCC',
+    });
+    session.format('webp');
+    session.settings({ ...session.snapshot.processing.settings, quality: 73 });
+    session.format('jpeg');
+    expect(session.snapshot.processing.settings.quality).toBe(95);
+    session.restore();
+    expect(session.snapshot.processing.settings).toEqual(
+      recommendations.jpeg.settings,
+    );
+    session.format('webp');
+    expect(session.snapshot.processing.settings.quality).toBe(73);
+    session.dispose();
+  });
+  it('uses passthrough for Quick and explicit encoding for Advanced same-format', async () => {
+    const { session, encode } = await ready();
+    session.format('png');
+    await tick();
+    expect(session.download()?.kind).toBe('passthrough');
+    expect(await session.download()?.blob.text()).toBe('original');
+    expect(encode).toHaveBeenCalledTimes(1);
+    session.mode('advanced');
+    session.generate();
+    await tick();
+    expect(encode).toHaveBeenCalledTimes(2);
+    expect(session.download()?.kind).toBe('encoded');
+    session.dispose();
+  });
+  it('rejects a bad candidate without losing a ready source/result, suspending download while checking', async () => {
+    const bad = deferred<ImageSource>();
+    const { session } = setup({
+      accept: async (file) =>
+        file.name === 'bad.png' ? bad.promise : source(file),
+    });
+    await tick();
+    session.select(source().file);
+    await tick();
+    const old = session.download();
+    session.select(new File(['bad'], 'bad.png'));
+    expect(session.download()).toBeUndefined();
+    bad.reject(new ImageFailure('corrupt'));
+    await tick();
+    expect(session.download()).toBe(old);
+    expect(session.snapshot.inputError).toBe('corrupt');
+    session.dispose();
+  });
+  it('only commits latest B/C candidate and keeps one active native operation', async () => {
+    const b = deferred<ImageSource>();
+    let active = 0,
+      max = 0;
+    const { session } = setup({
+      accept: async (file) => {
+        active++;
+        max = Math.max(max, active);
+        try {
+          return file.name === 'B.png' ? await b.promise : source(file);
+        } finally {
+          active--;
+        }
+      },
+    });
+    await tick();
+    session.select(new File(['b'], 'B.png'));
+    session.select(new File(['c'], 'C.png'));
+    b.resolve(source(new File(['b'], 'B.png')));
+    await tick();
+    expect(session.snapshot.source?.file.name).toBe('C.png');
+    expect(max).toBe(1);
+    session.dispose();
+  });
+  it('replaces waiting format jobs, refuses late results and does not restart identical pending presets', async () => {
+    const first = deferred<Blob>();
+    let count = 0;
+    const { session, encode } = setup({
+      encode: async () =>
+        ++count === 1 ? first.promise : new Blob(['latest']),
+    });
+    await tick();
+    session.select(source().file);
+    await tick();
+    session.format('jpeg');
+    session.format('webp');
+    session.format('webp');
+    expect(count).toBe(1);
+    first.resolve(new Blob(['obsolete']));
+    await tick();
+    expect(count).toBe(2);
+    expect(await session.download()?.blob.text()).toBe('latest');
+    expect(encode).toHaveBeenCalledTimes(0);
+    session.dispose();
+  });
+  it('invalidates cancelled selections on metadata rejection/removal/unmount', async () => {
+    const d = deferred<ImageSource>();
+    const { session } = setup({ accept: () => d.promise });
+    await tick();
+    session.select(source().file);
+    session.rejectSelection('bytes');
+    d.resolve(source());
+    await tick();
+    expect(session.snapshot.source).toBeUndefined();
+    session.remove();
+    session.dispose();
+    expect(session.snapshot.source).toBeUndefined();
+    expect(session.download()).toBeUndefined();
+  });
+  it('capabilities arriving after a Quick source cause exactly one generation, PNG is conservative fallback', async () => {
+    const caps = deferred<typeof capabilities>();
+    const { session, encode } = setup({ capabilities: () => caps.promise });
+    session.select(source().file);
+    caps.resolve({ ...capabilities, webp: { supported: false } });
+    await tick();
+    expect(session.snapshot.processing.settings.format).toBe('png');
+    expect(session.download()?.kind).toBe('passthrough');
+    expect(encode).not.toHaveBeenCalled();
+    session.dispose();
+  });
+  it('Advanced never auto generates, invalid values and stale blobs cannot download', async () => {
+    const { session, encode } = await ready();
+    session.mode('advanced');
+    session.settings({ ...session.snapshot.processing.settings, quality: NaN });
+    session.generate();
+    await tick();
+    expect(encode).toHaveBeenCalledTimes(1);
+    expect(session.download()).toBeUndefined();
+    expect(session.snapshot.processing.validSettings).toBe(false);
+    session.dispose();
+  });
+  it('a watchdog reports timeout but does not start a second heavy task before the first settles', async () => {
+    vi.useFakeTimers();
+    const d = deferred<void>();
+    const q = new SerialJobs(10),
+      timeout = vi.fn(),
+      second = vi.fn(async () => {});
+    q.schedule('a', () => d.promise, timeout);
+    q.schedule('b', second, timeout);
+    await vi.advanceTimersByTimeAsync(11);
+    expect(timeout).toHaveBeenCalledTimes(2);
+    expect(second).not.toHaveBeenCalled();
+    expect(q.active).toBe(true);
+    d.resolve();
+    await tick();
+    expect(q.active).toBe(false);
+    q.dispose();
+    vi.useRealTimers();
+  });
+  it('does not strand a queued encode when an equal edit or rejected candidate arrives', async () => {
+    const first = deferred<Blob>();
+    let count = 0;
+    const { session } = setup({
+      encode: async () =>
+        ++count === 1 ? first.promise : new Blob(['current']),
+    });
+    await tick();
+    session.select(source().file);
+    await tick();
+    session.format('jpeg');
+    session.mode('advanced');
+    session.settings({ ...session.snapshot.processing.settings });
+    session.select(new File(['b'], 'B.png'));
+    session.rejectSelection('bytes');
+    first.resolve(new Blob(['old']));
+    await tick();
+    expect(count).toBe(2);
+    expect(session.snapshot.processing.status).toBe('ready');
+    expect(await session.download()?.blob.text()).toBe('current');
+    session.dispose();
+  });
+});
+describe('effective parameters and filenames', () => {
+  it.each(['png', 'jpeg', 'webp'] as const)(
+    'restores %s baseline without forcing WebP',
+    (format) => {
+      let state = createProcessingState(recommendations.webp);
+      state = setRecommendedPreset(state, recommendations[format]);
+      state = restoreRecommended(state, sameSettings);
+      expect(state.settings).toEqual(recommendations[format].settings);
+      const ignored = updateSettings(
+        state,
+        {
+          ...state.settings,
+          jpegBackground: '#000000',
+          quality: format === 'png' ? 99 : state.settings.quality,
+        },
+        sameSettings,
+      );
+      if (format !== 'jpeg') expect(ignored).toBe(state);
+    },
+  );
+  it('normalizes true extensions without treating names as encode parameters', () => {
+    expect(downloadName('art.jpg', 'webp', 'encoded').name).toBe(
+      'art-converted.webp',
+    );
+    expect(downloadName('wrong.jpg', 'png', 'passthrough').name).toBe(
+      'wrong.png',
+    );
+    expect(downloadName('a', 'jpeg', 'encoded', 'nice.png.webp').name).toBe(
+      'nice.jpg',
+    );
+    for (const name of [
+      '../path',
+      'CON',
+      'a\u0000b',
+      ' ',
+      '.',
+      'a.',
+      'a ',
+      'a'.repeat(121),
+    ])
+      expect(downloadName('a', 'png', 'encoded', name).error).toBe(true);
+  });
+});

@@ -1,0 +1,14 @@
+{
+  "sourceRevision": 4,
+  "settingsRevision": 14,
+  "requestId": 16,
+  "status": "ready",
+  "kind": "encoded",
+  "bitmapsCreated": 30,
+  "bitmapsClosed": 30,
+  "canvasesCreated": 15,
+  "canvasesReleased": 15,
+  "urlsCreated": 19,
+  "urlsRevoked": 17,
+  "maxActive": 1
+}

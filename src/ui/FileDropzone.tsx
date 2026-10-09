@@ -9,6 +9,7 @@ import {
   type FileConstraints,
   type FileIssue,
   type FileIssueReason,
+  type FileSelection,
 } from './file-constraints';
 
 export interface FileDropzoneProps extends FileConstraints {
@@ -16,9 +17,11 @@ export interface FileDropzoneProps extends FileConstraints {
   label: string;
   hint?: string;
   disabled?: boolean;
+  appearance?: 'expanded' | 'compact';
   issueMessages: Record<FileIssueReason, string>;
   onFilesSelected: (files: File[]) => void;
   onRejected?: (issues: FileIssue[]) => void;
+  onSelection?: (selection: FileSelection) => void;
 }
 const hasFiles = (event: DragEvent) =>
   Array.from(event.dataTransfer.types).includes('Files') ||
@@ -30,6 +33,7 @@ export function FileDropzone({
   label,
   hint,
   disabled = false,
+  appearance = 'expanded',
   accept,
   multiple = false,
   maxFiles,
@@ -37,6 +41,7 @@ export function FileDropzone({
   issueMessages,
   onFilesSelected,
   onRejected,
+  onSelection,
 }: FileDropzoneProps) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
@@ -62,6 +67,7 @@ export function FileDropzone({
       maxSizeBytes,
     });
     setIssues(result.rejected);
+    onSelection?.(result);
     if (result.accepted.length) onFilesSelected(result.accepted);
     if (result.rejected.length) onRejected?.(result.rejected);
   };
@@ -88,6 +94,7 @@ export function FileDropzone({
         }}
       />
       <button
+        id={`${inputId}-button`}
         type="button"
         disabled={disabled}
         aria-label={label}
@@ -97,6 +104,7 @@ export function FileDropzone({
         {...stylex.props(
           controls.button,
           styles.zone,
+          appearance === 'compact' && styles.compact,
           dragging && !disabled && styles.dragging,
           issues.length > 0 && controls.invalid,
         )}
@@ -179,6 +187,13 @@ const styles = stylex.create({
     outlineWidth: 2,
     outlineColor: tokens.focus,
     outlineOffset: 2,
+  },
+  compact: {
+    minHeight: 44,
+    padding: tokens.space8,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    textAlign: 'start',
   },
   label: { fontWeight: 600, maxWidth: '100%' },
   issues: { paddingInlineStart: 24 },

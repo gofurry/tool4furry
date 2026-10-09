@@ -1,0 +1,389 @@
+[
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/cc43183d-3e19-451d-a16c-980e9ddad020",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "rects": [
+      {
+        "part": "file",
+        "width": 1056,
+        "x": 184.5,
+        "y": 287.5
+      },
+      {
+        "part": "settings",
+        "width": 320,
+        "x": 920.5,
+        "y": 447.59375
+      },
+      {
+        "part": "preview",
+        "width": 712,
+        "x": 184.5,
+        "y": 447.59375
+      },
+      {
+        "part": "result",
+        "width": 712,
+        "x": 184.5,
+        "y": 847.390625
+      }
+    ],
+    "scrollWidth": 1425,
+    "settings": 1,
+    "size": [
+      1440,
+      900
+    ],
+    "width": 1425
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/cc43183d-3e19-451d-a16c-980e9ddad020",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "rects": [
+      {
+        "part": "file",
+        "width": 945,
+        "x": 32,
+        "y": 287.5
+      },
+      {
+        "part": "settings",
+        "width": 320,
+        "x": 657,
+        "y": 447.59375
+      },
+      {
+        "part": "preview",
+        "width": 601,
+        "x": 32,
+        "y": 447.59375
+      },
+      {
+        "part": "result",
+        "width": 601,
+        "x": 32,
+        "y": 847.390625
+      }
+    ],
+    "scrollWidth": 1009,
+    "settings": 1,
+    "size": [
+      1024,
+      768
+    ],
+    "width": 1009
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/cc43183d-3e19-451d-a16c-980e9ddad020",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "rects": [
+      {
+        "part": "file",
+        "width": 822,
+        "x": 32,
+        "y": 287.5
+      },
+      {
+        "part": "settings",
+        "width": 320,
+        "x": 534,
+        "y": 447.59375
+      },
+      {
+        "part": "preview",
+        "width": 478,
+        "x": 32,
+        "y": 447.59375
+      },
+      {
+        "part": "result",
+        "width": 478,
+        "x": 32,
+        "y": 868.1875
+      }
+    ],
+    "scrollWidth": 886,
+    "settings": 1,
+    "size": [
+      901,
+      600
+    ],
+    "width": 886
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/cc43183d-3e19-451d-a16c-980e9ddad020",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "rects": [
+      {
+        "part": "file",
+        "width": 853,
+        "x": 16,
+        "y": 271.5
+      },
+      {
+        "part": "settings",
+        "width": 853,
+        "x": 16,
+        "y": 431.59375
+      },
+      {
+        "part": "preview",
+        "width": 853,
+        "x": 16,
+        "y": 886.78125
+      },
+      {
+        "part": "result",
+        "width": 853,
+        "x": 16,
+        "y": 1302.578125
+      }
+    ],
+    "scrollWidth": 885,
+    "settings": 1,
+    "size": [
+      900,
+      600
+    ],
+    "width": 885
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/cc43183d-3e19-451d-a16c-980e9ddad020",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "rects": [
+      {
+        "part": "file",
+        "width": 721,
+        "x": 16,
+        "y": 271.5
+      },
+      {
+        "part": "settings",
+        "width": 721,
+        "x": 16,
+        "y": 431.59375
+      },
+      {
+        "part": "preview",
+        "width": 721,
+        "x": 16,
+        "y": 886.78125
+      },
+      {
+        "part": "result",
+        "width": 721,
+        "x": 16,
+        "y": 1302.578125
+      }
+    ],
+    "scrollWidth": 753,
+    "settings": 1,
+    "size": [
+      768,
+      1024
+    ],
+    "width": 753
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/cc43183d-3e19-451d-a16c-980e9ddad020",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "rects": [
+      {
+        "part": "file",
+        "width": 343,
+        "x": 16,
+        "y": 285
+      },
+      {
+        "part": "settings",
+        "width": 343,
+        "x": 16,
+        "y": 445.09375
+      },
+      {
+        "part": "preview",
+        "width": 343,
+        "x": 16,
+        "y": 944.46875
+      },
+      {
+        "part": "result",
+        "width": 343,
+        "x": 16,
+        "y": 1360.265625
+      }
+    ],
+    "scrollWidth": 375,
+    "settings": 1,
+    "size": [
+      390,
+      844
+    ],
+    "width": 375
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/cc43183d-3e19-451d-a16c-980e9ddad020",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "rects": [
+      {
+        "part": "file",
+        "width": 328,
+        "x": 16,
+        "y": 285
+      },
+      {
+        "part": "settings",
+        "width": 328,
+        "x": 16,
+        "y": 445.09375
+      },
+      {
+        "part": "preview",
+        "width": 328,
+        "x": 16,
+        "y": 944.46875
+      },
+      {
+        "part": "result",
+        "width": 328,
+        "x": 16,
+        "y": 1360.265625
+      }
+    ],
+    "scrollWidth": 360,
+    "settings": 1,
+    "size": [
+      375,
+      812
+    ],
+    "width": 360
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/cc43183d-3e19-451d-a16c-980e9ddad020",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "rects": [
+      {
+        "part": "file",
+        "width": 273,
+        "x": 16,
+        "y": 334.5
+      },
+      {
+        "part": "settings",
+        "width": 273,
+        "x": 16,
+        "y": 549.6875
+      },
+      {
+        "part": "preview",
+        "width": 273,
+        "x": 16,
+        "y": 1114.0625
+      },
+      {
+        "part": "result",
+        "width": 273,
+        "x": 16,
+        "y": 1529.859375
+      }
+    ],
+    "scrollWidth": 305,
+    "settings": 1,
+    "size": [
+      320,
+      568
+    ],
+    "width": 305
+  },
+  {
+    "diagnostics": "{\n  \"sourceRevision\": 1,\n  \"settingsRevision\": 0,\n  \"requestId\": 1,\n  \"status\": \"ready\",\n  \"kind\": \"encoded\",\n  \"bitmapsCreated\": 6,\n  \"bitmapsClosed\": 6,\n  \"canvasesCreated\": 4,\n  \"canvasesReleased\": 4,\n  \"urlsCreated\": 2,\n  \"urlsRevoked\": 0,\n  \"maxActive\": 1\n}",
+    "download": "blob:http://127.0.0.1:4321/cc43183d-3e19-451d-a16c-980e9ddad020",
+    "order": [
+      "file",
+      "settings",
+      "preview",
+      "result"
+    ],
+    "rects": [
+      {
+        "part": "file",
+        "width": 765,
+        "x": 16,
+        "y": 271.5
+      },
+      {
+        "part": "settings",
+        "width": 765,
+        "x": 16,
+        "y": 431.59375
+      },
+      {
+        "part": "preview",
+        "width": 765,
+        "x": 16,
+        "y": 886.78125
+      },
+      {
+        "part": "result",
+        "width": 765,
+        "x": 16,
+        "y": 1302.578125
+      }
+    ],
+    "scrollWidth": 797,
+    "settings": 1,
+    "size": [
+      812,
+      375
+    ],
+    "width": 797
+  }
+]

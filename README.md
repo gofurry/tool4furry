@@ -1,6 +1,6 @@
 # Tool4Furry
 
-为 Furry 创作者准备的开源浏览器工具站。当前为 **V0.4-A — Tool Platform & Image Tools Foundation**：分类与完整目录、静态工具 SEO 合同、Quick/Advanced 状态合同及图片能力实测；保留既有品牌首页、Creative Studio 控件与 Workbench，尚无正式发布的工具。
+为 Furry 创作者准备的开源浏览器工具站。当前为 **V0.4-B — Image Converter**：首款真实单图 PNG/JPEG/WebP 转换器已提供开发预览，仍为 **draft**。Firefox、Safari/WebKit 与真实手机发布门禁尚未完成，因此正式目录仍为空。既有品牌首页、Creative Studio 控件与 Workbench 保持不变。
 
 前端及未来浏览器本地工具使用现有 [BSD-3-Clause](LICENSE) 协议。当前没有后端；未来 SaaS 后端将放在独立仓库。
 
@@ -21,6 +21,7 @@ pnpm dev
 | --- | --- |
 | `/`、`/#tools` | 品牌首页与最多 9 项真实精选；无工具时显示准备中的空状态 |
 | `/tools/` | 当前地区全部已发布工具，按任务/身份/场景发现；当前为空 |
+| `/preview/image-converter/` | DEV ONLY 真实图片转换草稿：推荐自动生成、高级参数、预览及下载 |
 | `/lab/canvas` | 完整视口画布、浮动 Dock、默认关闭的 Inspector、手机参数 Sheet |
 | `/lab/form` | 输入、参数、校验、模拟输出 |
 | `/lab/batch` | 增删示例任务、推进模拟状态、清空 |
@@ -29,6 +30,8 @@ pnpm dev
 | `/404` | 404 页面预览 |
 
 **Lab 只在 dev 可访问。** 页面明确标为 Demo；文件页仅持有本地文件引用并展示元信息，不读取内容、生成对象 URL、上传或持久存储。生产无 Lab 页面、入口或 demo 实现，首页保持零脚本、零 Astro Island。
+
+**Converter 预览也只在 dev 存在**，区别于只展示元信息的 Files Lab：它由工具模块在浏览器内读取、解码、编码并管理预览 URL，文件不上传或持久保存。正式 `/tools/image-converter/` 在公开发布门禁通过前不会生成。操作与验收记录见 [Image Converter 实施记录](docs/image-converter-implementation.md)。
 
 ## 检查与构建
 
@@ -91,6 +94,7 @@ docs/workbench-appearance.md V0.3-B 完整合同、布局所有权、浏览器�
 docs/site-homepage.md V0.3-C 完整合同、首页/目录/SEO 与验收记录
 docs/tool-platform-image-foundation.md V0.4-A 完整合同与 P0–P6 实施记录
 docs/image-processing-capabilities.md 原生编解码证据与 B/C/D 待验发布门禁
+docs/image-converter-implementation.md V0.4-B 草稿功能、复现、证据与发布阻断项
 public/brand/     可替换单一 Mark、静态 Creative Fragments SVG
 ```
 
@@ -118,7 +122,7 @@ GitHub Actions 对 dev/main 的 push 与 PR 执行安装、检查、测试及双
 
 完整边界见 [Tool Platform & Image Foundation](docs/tool-platform-image-foundation.md)。先为真实需求确认 Taxonomy 的领域/方向与有依据的身份/场景标签，在 Registry 中以 draft 开始；添加独立 lazy loader 和各已发布地区的静态 SEO 内容，再完成实际功能与浏览器验证后发布。分类变化不改变 `/tools/<slug>/`。发布构建会拒绝重复 ID/Slug、非法分类关系、地区/标签、缺失 loader 或文案。首页精选 ID 顺序仅决定展示优先级，不能绕过发布门。
 
-正式工具页使用单一 ToolRuntime：导航身份 → Astro 静态 H1/简介插槽 → 工具操作 → Island 外静态指南/相关工具。Lab 保留自己的 H1 和 Canvas 浮层。Quick/Advanced 共用工具自有 Settings；只有当前 sourceRevision/settingsRevision/requestId 的 ready 输出可下载。图片格式转换、尺寸调整、裁剪仍分别留在 B/C/D。
+正式工具页使用单一 ToolRuntime：导航身份 → Astro 静态 H1/简介插槽 → 工具操作 → Island 外静态指南/相关工具。Lab 保留自己的 H1 和 Canvas 浮层。Quick/Advanced 共用工具自有 Settings；只有当前 sourceRevision/settingsRevision/requestId 的 ready 输出可下载。B 已实现转换草稿；尺寸调整、裁剪仍留在 C/D。
 
 停止 dev 后可额外运行 `node scripts/verify-tool-fixture.mjs cn` 和 `node scripts/verify-tool-fixture.mjs global`：它们只在测试构建期间替换内存模块，输出到仓库外 `../.validation/platform-v04a/<region>/`，复用生产守卫验证非空页面及长文不进客户端 JS；不修改生产 Registry。**这些测试产物不可部署。**
 

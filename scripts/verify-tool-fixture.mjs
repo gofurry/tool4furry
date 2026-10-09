@@ -33,26 +33,26 @@ await build({
           if (path === registryPath) {
             const original = await readFile(path, 'utf8');
             const target =
-              'export const tools: readonly ToolDefinition[] = [];';
-            assert(original.includes(target), 'Registry test seam changed');
+              /export const tools: readonly ToolDefinition\[\] = [\s\S]*?;\r?\n/;
+            assert(target.test(original), 'Registry test seam changed');
             return (
               `import { publicationFixtures } from ${JSON.stringify(publicationPath)};\n` +
               original.replace(
                 target,
-                'export const tools: readonly ToolDefinition[] = publicationFixtures;',
+                'export const tools: readonly ToolDefinition[] = publicationFixtures;\n',
               )
             );
           }
           if (path === contentPath) {
             const original = await readFile(path, 'utf8');
             const target =
-              'export const toolPageContents: ToolContentMap = {};';
-            assert(original.includes(target), 'Content test seam changed');
+              /export const toolPageContents: ToolContentMap = [\s\S]*?;\r?\n/;
+            assert(target.test(original), 'Content test seam changed');
             return (
               `import { fixtureContents } from ${JSON.stringify(contentFixturePath)};\n` +
               original.replace(
                 target,
-                'export const toolPageContents: ToolContentMap = fixtureContents;',
+                'export const toolPageContents: ToolContentMap = fixtureContents;\n',
               )
             );
           }

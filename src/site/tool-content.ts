@@ -1,6 +1,7 @@
 import type { Region } from '../config/region';
 import type { ToolDefinition } from '../tools/types';
 import { getPublishedTools, tools } from '../tools/registry';
+import { imageConverterContent } from './image-converter-content';
 
 // Astro/build only. Never import this content module from React or the registry.
 export type ToolPageContent = {
@@ -16,7 +17,9 @@ export type ToolPageContent = {
 export type ToolContentMap = Readonly<
   Record<string, Partial<Record<Region, ToolPageContent>>>
 >;
-export const toolPageContents: ToolContentMap = {};
+export const toolPageContents: ToolContentMap = {
+  'image-converter': imageConverterContent,
+};
 
 export function getToolPageContent(
   tool: ToolDefinition,

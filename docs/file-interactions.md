@@ -87,3 +87,9 @@ Vitest 覆盖纯文件匹配及部分接受、大小/数量边界、同文件重
 本轮没有发现需要扩大 Workbench 状态、Astro 配置或全站 Hydration 的问题；没有已知的 V0.3 架构阻碍。上述真机复核仍需完成。TimePicker 明确延期，不继续预建无需求组件。
 
 参考浏览器语义：[文件 input](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file)、[文件拖放](https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop)、[scrollTo](https://developer.mozilla.org/en-US/docs/Web/API/Window/scrollTo)。
+
+## V0.4-B 增量接口记录
+
+FileDropzone 新增可选 `appearance: 'expanded' | 'compact'`（默认 expanded），只改变外观；新增 `onSelection(selection: FileSelection)`，在原有 accepted/rejected 回调之前报告本次完整元信息校验结果。Converter 用它识别“本次全拒绝”，使上一候选失效且恢复旧下载。原有回调、部分接受规则与文件所有权不变。触发按钮 ID 为 `${inputId}-button`，供移除后的焦点返回使用。组件仍不读取字节、不生成 URL、不持有工具队列。
+
+以上 V0.2-B 历史记录未重写其验收事实。

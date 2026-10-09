@@ -1,0 +1,177 @@
+import type { Region } from '../../config/region';
+import type { ImageErrorCode } from '../image/types';
+const cn = {
+  local: '图片只在当前浏览器内处理，不会上传。',
+  pick: '选择图片或拖放到这里',
+  replace: '替换图片',
+  remove: '移除图片',
+  file: '当前图片',
+  settings: '转换设置',
+  preview: '图片预览',
+  result: '结果与下载',
+  formats: '输出格式',
+  quick: '快速',
+  advanced: '高级',
+  modes: '设置模式',
+  recommended: '推荐设置',
+  custom: '自定义设置',
+  restore: '恢复当前格式推荐',
+  quality: '编码质量',
+  precise: '精确质量（1–100）',
+  qualityError: '请输入 1–100 的整数。',
+  background: 'JPEG 背景色',
+  backgroundError: '使用 #RRGGBB 格式，例如 #FFFFFF。',
+  filename: '下载文件名主体',
+  filenameHint: '留空使用默认名称；扩展名由真实输出格式决定。',
+  filenameError:
+    '名称不能含路径/控制字符、保留名称、首尾空格/句点或超过 120 字符。',
+  resetName: '恢复默认文件名',
+  checking: '正在检查浏览器输出能力…',
+  unavailable: '此浏览器无法验证该格式输出。',
+  fallback:
+    '此浏览器无法输出 WebP，已选 PNG。WebP 输入仍会单独检查是否可解码。',
+  retryCapability: '重新检测输出能力',
+  none: '暂无可用的默认输出格式，请重试检测或选择可用格式。',
+  validating: '正在检查新图片；检查期间暂停下载，失败会保留原图与合法结果。',
+  idle: '选择一张静态图片开始。',
+  sourceReady: '原图已就绪，请生成结果。',
+  processing: '正在处理并验证输出…',
+  stale: '设置已改变，当前显示的是旧结果；请重新生成后下载。',
+  ready: '结果已通过格式、解码与尺寸验证。',
+  passthrough:
+    '目标格式与原图相同，未重新编码，下载保留原始字节。高级自定义质量仅在主动生成时应用。',
+  generate: '生成结果',
+  reencode: '重新编码',
+  retry: '重试当前设置',
+  download: '下载结果',
+  originalDownload: '下载原图',
+  original: '原图',
+  output: '输出',
+  old: '旧结果',
+  noOutput: '尚无有效输出',
+  previewError: '预览加载失败。请重新选择图片或生成结果。',
+  limitations:
+    '仅静态 PNG/JPEG/WebP。转换不改变分辨率；文件可能变大，重新编码可能改变色彩并丢失元数据。',
+  budget:
+    '开发保护值：单文件 20 MiB、1600 万像素、单边 8192px；尚未确认为全设备发布限制。',
+  formatNote:
+    'Quick 格式选项应用推荐参数；Advanced 切换格式保留该格式上次修改的偏好。PNG 不含有损质量设置。',
+  jpegNote: 'JPEG 不支持透明，透明区域将与背景色合成。',
+  qualitySummary: '质量',
+  standard: '标准输出',
+  saved: '输出字节变化',
+  previewToggle: '预览内容',
+  viewResult: '查看结果',
+  disabledCount: '一次只处理一张图片，其余文件未接收。',
+  disabledSize: '文件超过开发保护值 20 MiB。',
+  disabledType: '文件类型不支持。',
+  errors: {
+    empty: '文件为空，请重新选择。',
+    bytes: '文件超过 20 MiB 的开发保护值。',
+    dimensions:
+      '图片尺寸超过开发保护值（单边 8192px / 1600 万像素），不会自动缩小。',
+    unsupported: '仅接受静态 PNG、JPEG、WebP；此文件不属于支持范围。',
+    corrupt: '图片结构损坏、截断或不符合支持范围，请换一张完整图片。',
+    animated: '不支持 APNG 或动画 WebP；不会把第一帧当作转换结果。',
+    decode: '浏览器无法正确解码这张图片或其方向，请换图或换浏览器。',
+    encode: '浏览器未能完成编码，请重试或选择另一输出格式。',
+    output: '输出的真实格式、尺寸或可解码性不符，已阻止下载。',
+    timeout:
+      '浏览器操作超时。未完成的原生任务仍占用串行通道；请等待其结束后重试，或重新加载页面。',
+    cancelled: '操作已取消。',
+  } satisfies Record<ImageErrorCode, string>,
+};
+const global: typeof cn = {
+  local: 'Images stay in this browser. Nothing is uploaded.',
+  pick: 'Choose an image or drop it here',
+  replace: 'Replace image',
+  remove: 'Remove image',
+  file: 'Current image',
+  settings: 'Conversion settings',
+  preview: 'Image preview',
+  result: 'Result and download',
+  formats: 'Output format',
+  quick: 'Quick',
+  advanced: 'Advanced',
+  modes: 'Settings mode',
+  recommended: 'Recommended settings',
+  custom: 'Custom settings',
+  restore: 'Restore this format’s defaults',
+  quality: 'Encoding quality',
+  precise: 'Exact quality (1–100)',
+  qualityError: 'Enter an integer from 1 to 100.',
+  background: 'JPEG background',
+  backgroundError: 'Use #RRGGBB, for example #FFFFFF.',
+  filename: 'Download filename stem',
+  filenameHint:
+    'Leave empty for the default name. The extension follows the actual output format.',
+  filenameError:
+    'Avoid paths, control characters, reserved names, leading/trailing spaces or dots, and names over 120 characters.',
+  resetName: 'Use default filename',
+  checking: 'Checking browser export capabilities…',
+  unavailable: 'This browser could not verify export in this format.',
+  fallback:
+    'WebP export is unavailable here; PNG is selected. WebP input decoding is checked separately.',
+  retryCapability: 'Check export support again',
+  none: 'No default export format is available. Retry detection or select a supported format.',
+  validating:
+    'Checking the new image. Download is paused; a failed check keeps the previous image and valid result.',
+  idle: 'Choose one static image to begin.',
+  sourceReady: 'Source is ready. Generate a result.',
+  processing: 'Processing and verifying output…',
+  stale:
+    'Settings changed. This is an old result; generate again before downloading.',
+  ready: 'Output format, decoding and dimensions have been verified.',
+  passthrough:
+    'The target matches the original format. No re-encoding; download keeps the original bytes. Custom advanced quality applies only after explicit generation.',
+  generate: 'Generate result',
+  reencode: 'Re-encode image',
+  retry: 'Retry current settings',
+  download: 'Download result',
+  originalDownload: 'Download original',
+  original: 'Original',
+  output: 'Output',
+  old: 'Old result',
+  noOutput: 'No verified output yet',
+  previewError:
+    'The preview could not load. Choose the image again or generate a new result.',
+  limitations:
+    'Static PNG/JPEG/WebP only. Resolution is unchanged. Files may grow; re-encoding can change colors and remove metadata.',
+  budget:
+    'Development guardrails: 20 MiB per file, 16 million pixels, 8192px per edge. These are not validated release limits for every device.',
+  formatNote:
+    'Quick format choices apply defaults. Advanced format changes recall that format’s last edited preferences. PNG has no lossy quality setting.',
+  jpegNote:
+    'JPEG has no transparency; transparent areas are composited over the background.',
+  qualitySummary: 'Quality',
+  standard: 'Standard output',
+  saved: 'Output byte change',
+  previewToggle: 'Preview content',
+  viewResult: 'View result',
+  disabledCount:
+    'Only one image is accepted per selection. The other files were not accepted.',
+  disabledSize: 'The file exceeds the 20 MiB development guardrail.',
+  disabledType: 'Unsupported file type.',
+  errors: {
+    empty: 'The file is empty. Choose another image.',
+    bytes: 'The file exceeds the 20 MiB development guardrail.',
+    dimensions:
+      'The image exceeds the development guardrails (8192px per edge / 16 million pixels). It will not be resized automatically.',
+    unsupported:
+      'Only static PNG, JPEG and WebP are accepted. This file is outside the supported scope.',
+    corrupt:
+      'The image is truncated, damaged or outside the supported structure. Choose a complete image.',
+    animated:
+      'APNG and animated WebP are not supported. The first frame will not be substituted.',
+    decode:
+      'The browser could not decode this image or its orientation correctly. Try another image or browser.',
+    encode:
+      'The browser could not encode the image. Retry or choose another output format.',
+    output:
+      'Actual output format, dimensions or decoding did not match. Download was blocked.',
+    timeout:
+      'The browser operation timed out. Its native task still owns the serial lane. Wait for it to settle and retry, or reload this page.',
+    cancelled: 'The operation was cancelled.',
+  },
+};
+export const converterMessages: Record<Region, typeof cn> = { cn, global };

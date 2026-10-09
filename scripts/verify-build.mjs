@@ -31,6 +31,10 @@ assert(
   'Lab paths leaked into production',
 );
 assert(
+  !files.some((file) => /(^|\/)preview(\/|$)/i.test(file)),
+  'DEV tool preview route leaked',
+);
+assert(
   !files.some((file) =>
     /LabRuntime|WorkbenchLab|LabMenu|CanvasDemo|FormDemo|BatchDemo|UILab|FilesLab/.test(
       file,
@@ -316,6 +320,10 @@ const fontAssets = new Set();
 const inlineFonts = new Set();
 for (const page of htmlFiles) {
   const content = await readFile(resolve(root, page), 'utf8');
+  assert(
+    !content.includes('data-tool-preview'),
+    `DEV tool preview markup leaked: ${page}`,
+  );
   if (!fixtureMode)
     assert(
       !/STATIC_GUIDE_ONLY_|data-fixture-counter/.test(content),
@@ -534,6 +542,15 @@ for (const font of ['dm-sans', 'noto-sans-sc']) {
 }
 for (const file of files.filter((file) => file.endsWith('.js'))) {
   const js = await readFile(resolve(root, file), 'utf8');
+  assert(
+    !js.includes('ownership diagnostics'),
+    `DEV diagnostics leaked: ${file}`,
+  );
+  if (!files.includes('tools/image-converter/index.html'))
+    assert(
+      !/data-image-converter|Checking the new image|正在检查新图片/.test(js),
+      `Draft converter implementation leaked: ${file}`,
+    );
   assert(
     !js.includes('STATIC_GUIDE_ONLY_'),
     'Astro-only long content leaked into client JS',
