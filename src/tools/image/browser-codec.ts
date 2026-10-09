@@ -1,0 +1,178 @@
+import { inspectImage } from './inspect-image';
+import { ImageResources } from './resources';
+import {
+  ImageFailure,
+  imageBudget,
+  mime,
+  formats,
+  type ImageInfo,
+  type ImageSource,
+  type ImageFormat,
+} from './types';
+
+export function orientedSize(info: ImageInfo) {
+  return info.orientation >= 5
+    ? { width: info.height, height: info.width }
+    : { width: info.width, height: info.height };
+}
+export async function decodeChecked(
+  blob: Blob,
+  info: ImageInfo,
+  resources: ImageResources,
+) {
+  let bitmap: ImageBitmap;
+  try {
+    bitmap = await resources.bitmap(blob);
+  } catch {
+    throw new ImageFailure('decode');
+  }
+  const size = orientedSize(info);
+  if (bitmap.width !== size.width || bitmap.height !== size.height) {
+    resources.close(bitmap);
+    throw new ImageFailure('decode');
+  }
+  return bitmap;
+}
+export async function acceptImage(
+  file: File,
+  resources: ImageResources,
+): Promise<ImageSource> {
+  const info = await inspectImage(file);
+  const blob = file.slice(0, file.size, mime[info.format]);
+  const bitmap = await decodeChecked(blob, info, resources);
+  resources.close(bitmap);
+  return { file, info, blob, ...orientedSize(info) };
+}
+
+export function toBlob(
+  canvas: HTMLCanvasElement,
+  type: string,
+  quality?: number,
+): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    try {
+      canvas.toBlob(
+        (blob) =>
+          blob?.size ? resolve(blob) : reject(new ImageFailure('encode')),
+        type,
+        quality,
+      );
+    } catch {
+      reject(new ImageFailure('encode'));
+    }
+  });
+}
+export async function validateOutput(
+  blob: Blob,
+  format: ImageFormat,
+  width: number,
+  height: number,
+  resources: ImageResources,
+) {
+  if (!blob.size || blob.type !== mime[format])
+    throw new ImageFailure('output');
+  try {
+    // Source byte guard is not an output size promise: a JPEG can become a larger PNG.
+    const info = await inspectImage(blob, imageBudget.pixels * 5 + 1024 * 1024);
+    if (
+      info.format !== format ||
+      info.orientation !== 1 ||
+      info.width !== width ||
+      info.height !== height
+    )
+      throw new ImageFailure('output');
+    const bitmap = await decodeChecked(blob, info, resources);
+    resources.close(bitmap);
+  } catch (error) {
+    throw new ImageFailure(
+      'output',
+      error instanceof ImageFailure
+        ? `${error.code}: ${error.detail}`
+        : String(error),
+    );
+  }
+  return blob;
+}
+export async function encodeImage(
+  source: ImageSource,
+  settings: {
+    format: ImageFormat;
+    quality: number | null;
+    jpegBackground: string;
+  },
+  resources: ImageResources,
+) {
+  const { format, quality, jpegBackground } = settings;
+  if (
+    format !== 'png' &&
+    (!Number.isInteger(quality) || quality! < 1 || quality! > 100)
+  )
+    throw new ImageFailure('encode');
+  if (format === 'jpeg' && !/^#[0-9a-f]{6}$/i.test(jpegBackground))
+    throw new ImageFailure('encode');
+  const bitmap = await decodeChecked(source.blob, source.info, resources);
+  let canvas: HTMLCanvasElement | undefined;
+  try {
+    canvas = resources.canvas(source.width, source.height);
+    const context = canvas.getContext('2d');
+    if (!context) throw new ImageFailure('encode');
+    if (format === 'jpeg') {
+      context.fillStyle = jpegBackground;
+      context.fillRect(0, 0, source.width, source.height);
+    }
+    context.drawImage(bitmap, 0, 0);
+  } catch (error) {
+    if (canvas) resources.release(canvas);
+    throw error;
+  } finally {
+    resources.close(bitmap);
+  }
+  try {
+    const blob = await toBlob(
+      canvas!,
+      mime[format],
+      format === 'png' ? undefined : quality! / 100,
+    );
+    resources.release(canvas!);
+    canvas = undefined;
+    return await validateOutput(
+      blob,
+      format,
+      source.width,
+      source.height,
+      resources,
+    );
+  } finally {
+    if (canvas) resources.release(canvas);
+  }
+}
+
+export type Capabilities = Record<
+  ImageFormat,
+  { supported: boolean; reason?: string }
+>;
+export async function detectCapabilities(
+  resources: ImageResources,
+): Promise<Capabilities> {
+  const result = {} as Capabilities;
+  for (const format of formats) {
+    const canvas = resources.canvas(2, 2);
+    try {
+      const context = canvas.getContext('2d');
+      if (!context) throw new ImageFailure('encode');
+      context.fillStyle = '#A6532C';
+      context.fillRect(0, 0, 1, 2);
+      const blob = await toBlob(canvas, mime[format], 0.85);
+      await validateOutput(blob, format, 2, 2, resources);
+      result[format] = { supported: true };
+    } catch (error) {
+      result[format] = {
+        supported: false,
+        reason: error instanceof ImageFailure ? error.code : 'encode',
+      };
+    } finally {
+      resources.release(canvas);
+    }
+  }
+  return result;
+}

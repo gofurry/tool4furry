@@ -1,0 +1,44 @@
+"""Generate owned, synthetic codec fixtures; Pillow is needed only to regenerate them.
+No private/user pictures. Not run by install/build/CI. Large samples stay outside repo.
+"""
+from pathlib import Path
+from PIL import Image
+import struct, zlib, sys, random
+
+root = Path(__file__).resolve().parents[1]
+dest = root / 'tests/fixtures/images'
+dest.mkdir(parents=True, exist_ok=True)
+image = Image.new('RGBA', (80, 48), (0, 0, 0, 0))
+for y in range(48):
+    for x in range(80):
+        image.putpixel((x, y), ((240, 20, 20, 255) if x < 40 else (20, 220, 20, 255)) if y < 24 else ((20, 20, 240, 128) if x < 40 else (0, 0, 0, 0)))
+image.save(dest / 'transparent.png')
+image.save(dest / 'static.webp', lossless=True)
+rgb = Image.new('RGB', image.size, 'white'); rgb.paste(image, mask=image.getchannel('A'))
+rgb.save(dest / 'static.jpg', quality=95)
+rgb.save(dest / 'progressive.jpg', quality=95, progressive=True)
+for orientation in range(1, 9):
+    exif = Image.Exif(); exif[274] = orientation
+    rgb.save(dest / f'orientation-{orientation}.jpg', exif=exif, quality=100, subsampling=0)
+image.save(dest / 'animated.png', save_all=True, append_images=[image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)], duration=120, loop=0)
+image.save(dest / 'animated.webp', save_all=True, append_images=[image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)], duration=120, loop=0, lossless=True)
+(dest / 'wrong-extension.jpg').write_bytes((dest / 'transparent.png').read_bytes())
+(dest / 'truncated.png').write_bytes((dest / 'transparent.png').read_bytes()[:-8])
+(dest / 'unsupported.gif').write_bytes(b'GIF89a' + b'\0' * 20)
+(dest / 'empty.png').write_bytes(b'')
+def chunk(kind, data):
+    return struct.pack('>I', len(data)) + kind + data + struct.pack('>I', zlib.crc32(kind + data))
+# Valid CRC / oversized dimensions, rejected before allocating a bitmap.
+for name, size in [('over-edge.png', (8193, 1)), ('over-pixels.png', (4001, 4000))]:
+    data = b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', *size, 8, 6, 0, 0, 0))
+    (dest / name).write_bytes(data + chunk(b'IDAT', b'') + chunk(b'IEND', b''))
+# False marker bytes inside text are not animation chunks.
+png = (dest / 'transparent.png').read_bytes()
+(dest / 'text-marker.png').write_bytes(png[:-12] + chunk(b'tEXt', b'note\0acTL ANIM ANMF') + png[-12:])
+large = root.parent / '.validation/converter-v04b/samples'
+large.mkdir(parents=True, exist_ok=True)
+for name, size in [('budget-4000.png', (4000,4000)), ('edge-8192.png', (8192,64))]:
+    Image.new('RGB', size, (80,130,200)).save(large / name)
+if '--large' in sys.argv:
+    Image.frombytes('RGB', (4000,4000), random.Random(44).randbytes(48000000)).save(large / 'noise-4000.jpg', quality=80)
+print(f'Generated {len(list(dest.iterdir()))} owned fixtures; large files: {large}')
