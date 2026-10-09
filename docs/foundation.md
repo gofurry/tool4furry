@@ -48,6 +48,8 @@ Gate 实验先于工作台实现：最小 React Island 点击计数从 0 到 1�
 
 ## 增加第一个真实工具
 
+V0.4-A 补充的当前发布门：必须有合法 category/group、按需 audiences/contexts、目标地区 SEO 内容和 loader；完整目录 `/tools/` 覆盖所有已发布工具，首页只展示最多 9 项精选。静态简介通过 ToolRuntime 命名插槽组合，导航身份不再与正式工具 H1 重复。详细实施顺序与验收见 [Tool Platform & Image Foundation](tool-platform-image-foundation.md)；下面早期步骤及历史验收不代表首款真实图片工具已交付。
+
 1. 在 `src/tools/<tool-id>/` 添加工具 React 根组件与独立 TypeScript 算法。组件接收 region，将自有 UI 通过插槽传给 WorkbenchShell；算法不依赖 Shell。
 2. 在 registry 添加稳定 id、slug、分类、mode、regions、两种语言的标题/描述，先标记 draft。元信息文件不能静态导入实现。
 3. 在 loaders 添加字面量 `() => import('./<tool-id>/Tool')`。无需修改 SiteLayout、WorkbenchShell 或工具路由。

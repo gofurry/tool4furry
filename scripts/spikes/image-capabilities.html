@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Tool4Furry — isolated image capability probe</title>
+<style>body{font:16px system-ui;max-width:960px;margin:32px auto;padding:16px}button{font:inherit;min-height:44px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f7f5f0;padding:16px}canvas{border:1px solid #777;width:128px;height:128px;image-rendering:pixelated}</style>
+<h1>Image capability probe — test only</h1>
+<p>Synthetic 32×32 color/alpha fixture. No user files, uploads, object URLs or production tool. Includes a bounded 2048×2048 PNG round trip; this does not establish a device limit.</p>
+<button id="run" disabled>Run local probe</button>
+<p id="status" role="status">Ready</p>
+<canvas id="source" width="32" height="32" aria-label="Synthetic color and transparency source"></canvas>
+<pre id="report">No results yet.</pre>
+<script type="module" src="./image-capabilities.js"></script>
+</html>

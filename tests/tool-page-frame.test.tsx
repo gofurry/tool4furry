@@ -39,14 +39,21 @@ describe('product navigation', () => {
       expect(
         screen
           .getByRole('menu', { name: t.tools })
-          .querySelectorAll('a[href^="/tools/"], a[href^="/lab/"]'),
+          .querySelectorAll(
+            'a[href^="/tools/"]:not([href="/tools/"]), a[href^="/lab/"]',
+          ),
       ).toHaveLength(0);
+      expect(
+        screen
+          .getByRole('menuitem', { name: t.browseAll })
+          .getAttribute('href'),
+      ).toBe('/tools/');
       expect(
         screen.getByRole('menuitem', { name: t.back }).getAttribute('href'),
       ).toBe('/');
       await waitFor(() =>
         expect(document.activeElement).toBe(
-          screen.getByRole('menuitem', { name: t.back }),
+          screen.getByRole('menuitem', { name: t.browseAll }),
         ),
       );
       await user.keyboard('{Escape}');
@@ -68,7 +75,8 @@ describe('product navigation', () => {
       slug: `${id}-slug`,
       status,
       regions,
-      category: 'fixture-only',
+      category: 'images',
+      group: 'image-processing',
       mode: 'form',
       copy: {
         cn: { title: id, description: '' },
@@ -97,7 +105,7 @@ describe('product navigation', () => {
     );
     await user.click(screen.getByRole('button', { name: messages.cn.tools }));
     const item = await screen.findByRole('menuitem', { name: 'current' });
-    expect(item.getAttribute('href')).toBe('/tools/current-slug');
+    expect(item.getAttribute('href')).toBe('/tools/current-slug/');
     expect(item.getAttribute('aria-current')).toBe('page');
     expect(screen.queryByText('draft')).toBeNull();
     expect(screen.queryByText('overseas')).toBeNull();

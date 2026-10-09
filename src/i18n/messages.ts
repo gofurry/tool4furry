@@ -23,6 +23,17 @@ const cn = {
   intro:
     '为 Furry 创作者打造的轻巧工具箱。让素材处理与日常创作更简单，把时间留给真正喜欢的事情。',
   tools: '工具箱',
+  browseAll: '浏览全部工具',
+  catalogTitle: '工具箱 — Tool4Furry',
+  catalogDescription:
+    '按任务、身份和场景浏览 Tool4Furry 已发布的浏览器工具。首批工具正在准备中。',
+  catalogIntro: '从你想完成的事情出发，找到合适的浏览器工具。',
+  discover: '适合谁，在哪里用',
+  categories: '按任务浏览',
+  relatedTools: '相关工具',
+  toolSteps: '使用步骤',
+  toolLimitations: '支持范围与限制',
+  toolFaq: '常见问题',
   empty: '工具正在准备中',
   emptyDetail:
     '首批工具仍在打磨中。从创作中的小事出发，让每一次灵感都有更多发挥的空间。',
@@ -60,6 +71,18 @@ const global: Messages = {
   intro:
     'Thoughtful browser tools for furry creators, made to simplify everyday creative tasks.',
   tools: 'Toolbox',
+  browseAll: 'Browse all tools',
+  catalogTitle: 'Toolbox — Tool4Furry',
+  catalogDescription:
+    'Browse published Tool4Furry browser tools by task, audience and context. Our first tools are on the way.',
+  catalogIntro:
+    'Start with what you want to do. Find a browser tool that fits.',
+  discover: 'Who it is for, where it fits',
+  categories: 'Browse by task',
+  relatedTools: 'Related tools',
+  toolSteps: 'How to use',
+  toolLimitations: 'Support and limitations',
+  toolFaq: 'Frequently asked questions',
   empty: 'Tools are on the way',
   emptyDetail:
     'Our first tools are still taking shape. Starting with the little things in your creative day, so your ideas have more room to grow.',

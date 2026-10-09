@@ -5,6 +5,7 @@ import * as stylex from '@stylexjs/stylex';
 import type { Region } from '../config/region';
 import type { WorkspaceMode } from './types';
 import { getPublishedTools } from './registry';
+import { getSwitcherTools } from '../site/catalog';
 import { messages } from '../i18n/messages';
 import { controls as c } from '../styles/controls';
 import { tokens } from '../styles/tokens.stylex';
@@ -18,6 +19,7 @@ export default function ToolPageFrame({
   currentToolId,
   debug,
   children,
+  intro,
 }: {
   region: Region;
   mode: WorkspaceMode;
@@ -25,14 +27,16 @@ export default function ToolPageFrame({
   currentToolId?: string;
   debug?: ReactNode;
   children: ReactNode;
+  intro?: ReactNode;
 }) {
   const t = messages[region];
   const published = getPublishedTools(region);
+  const shortcuts = getSwitcherTools(published, currentToolId);
   return (
     <div {...stylex.props(s.frame)}>
       <header
         data-tool-page-entry
-        {...stylex.props(s.header, mode === 'canvas' && s.floating)}
+        {...stylex.props(s.header, mode === 'canvas' && !intro && s.floating)}
       >
         <div {...stylex.props(s.entry, mode === 'canvas' && s.elevated)}>
           <a
@@ -70,10 +74,10 @@ export default function ToolPageFrame({
                     {published.length === 0 && (
                       <p {...stylex.props(menu.note)}>{t.empty}</p>
                     )}
-                    {published.map((tool) => (
+                    {shortcuts.map((tool) => (
                       <Menu.LinkItem
                         key={tool.id}
-                        href={`/tools/${tool.slug}`}
+                        href={`/tools/${tool.slug}/`}
                         aria-current={
                           tool.id === currentToolId ? 'page' : undefined
                         }
@@ -82,6 +86,9 @@ export default function ToolPageFrame({
                         {tool.copy[region].title}
                       </Menu.LinkItem>
                     ))}
+                    <Menu.LinkItem href="/tools/" {...stylex.props(menu.item)}>
+                      {t.browseAll}
+                    </Menu.LinkItem>
                     <Menu.LinkItem href="/" {...stylex.props(menu.item)}>
                       {t.back}
                     </Menu.LinkItem>
@@ -90,12 +97,19 @@ export default function ToolPageFrame({
               </Menu.Positioner>
             </Menu.Portal>
           </Menu.Root>
-          <h1 title={title} {...stylex.props(s.title)}>
-            {title}
-          </h1>
+          {intro ? (
+            <p data-tool-identity title={title} {...stylex.props(s.title)}>
+              {title}
+            </p>
+          ) : (
+            <h1 title={title} {...stylex.props(s.title)}>
+              {title}
+            </h1>
+          )}
           {debug}
         </div>
       </header>
+      {intro}
       {children}
     </div>
   );

@@ -1,6 +1,6 @@
 # Tool4Furry
 
-为 Furry 创作者准备的开源浏览器工具站。当前为 **V0.3-C — Site Shell, Homepage & Tool Discovery**：静态品牌首页、诚实工具目录与双地区 SEO；保留既有 Creative Studio 控件与 Workbench，尚无正式发布的工具。
+为 Furry 创作者准备的开源浏览器工具站。当前为 **V0.4-A — Tool Platform & Image Tools Foundation**：分类与完整目录、静态工具 SEO 合同、Quick/Advanced 状态合同及图片能力实测；保留既有品牌首页、Creative Studio 控件与 Workbench，尚无正式发布的工具。
 
 前端及未来浏览器本地工具使用现有 [BSD-3-Clause](LICENSE) 协议。当前没有后端；未来 SaaS 后端将放在独立仓库。
 
@@ -19,7 +19,8 @@ pnpm dev
 
 | 路径 | 内容 |
 | --- | --- |
-| `/`、`/#tools` | 品牌首页与工具目录；无正式工具时显示准备中的空状态 |
+| `/`、`/#tools` | 品牌首页与最多 9 项真实精选；无工具时显示准备中的空状态 |
+| `/tools/` | 当前地区全部已发布工具，按任务/身份/场景发现；当前为空 |
 | `/lab/canvas` | 完整视口画布、浮动 Dock、默认关闭的 Inspector、手机参数 Sheet |
 | `/lab/form` | 输入、参数、校验、模拟输出 |
 | `/lab/batch` | 增删示例任务、推进模拟状态、清空 |
@@ -69,10 +70,10 @@ python -m http.server 8081 --directory dist/global
 
 ```text
 src/
-  pages/          Astro 首页、404、lab/[mode]、tools/[slug]
+  pages/          Astro 首页、完整 tools 目录、404、lab/[mode]、tools/[slug]
   layouts/        SiteLayout：品牌、语言、SEO、页面外壳
   components/site/ 静态共用品牌组合
-  site/           Catalog 文案、类别标签与发布元数据投影
+  site/           Taxonomy、Catalog 投影及 Astro-only 工具 SEO 内容
   workbench/      可选插槽、响应式、面板开关
   ui/             受控 UI 原语、Island 内的 UiProvider
   lab/            开发 demo、独立状态与纯模拟逻辑
@@ -88,6 +89,8 @@ docs/file-interactions.md 文件/滚动 API、边界和 V0.2-B 验收
 docs/visual-foundation.md 自托管字体、视觉 Token、控件状态与 V0.3-A 验收
 docs/workbench-appearance.md V0.3-B 完整合同、布局所有权、浏览器与构建验收
 docs/site-homepage.md V0.3-C 完整合同、首页/目录/SEO 与验收记录
+docs/tool-platform-image-foundation.md V0.4-A 完整合同与 P0–P6 实施记录
+docs/image-processing-capabilities.md 原生编解码证据与 B/C/D 待验发布门禁
 public/brand/     可替换单一 Mark、静态 Creative Fragments SVG
 ```
 
@@ -107,6 +110,16 @@ GitHub Actions 对 dev/main 的 push 与 PR 执行安装、检查、测试及双
 
 人工重点复核 `/lab/canvas` 在 901/900px 切换、390px 竖屏及 812×375 横屏：打开参数前后画布不缩小，名称/大小/颜色/计数保留，Select → Sheet 两次 Escape 依次关闭且返回焦点。Form/Batch 手机依次阅读输入/执行/结果或队列/设置。内置 Chromium 验收属于视口模拟；真实 iOS/Android 的软键盘、触摸、安全区与辅助技术仍需人工检查。
 
-首页合同与实际验收见 [Site Homepage](docs/site-homepage.md)。Header/Footer 的「工具箱」均返回 `/#tools`；导航无吸顶或汉堡菜单。首页不加载 React 或动画运行时，品牌 Mark 与 favicon 共用一个可替换 SVG，Hero 只用本地静态矢量。当前没有探索主 CTA、搜索框或假工具卡；未来 Registry 中当前地区的真实 `published` 工具会自动进入 Editorial Grid。未知类别安全省略标签，工具实现仍遵守既有加载与发布流程。SEO 仅提供文本 OG，本轮没有分享图。
+首页历史合同与验收见 [Site Homepage](docs/site-homepage.md)。V0.4-A 将 Header/Footer/404 的「工具箱」入口更新为 `/tools/` 完整目录，保留首页 `#tools` 兼容锚点；导航仍无吸顶或汉堡菜单。首页不加载 React 或动画运行时，品牌 Mark 与 favicon 共用一个 SVG，Hero 美术未改。当前没有探索主 CTA、搜索框或假工具卡。真实 `published` 工具按地区进入完整目录，首页精选最多 9 项；未知/错误分类在发布构建阶段拒绝。SEO 仅提供文本 OG，没有分享图。
 
-人工审查首页时重点看中英标题换行、320px 导航、手机图形与目录距离、Tab 焦点及 Footer；从 404 的「工具箱」链接确认能返回目录。真实移动设备与屏幕阅读器验收仍待维护者完成。
+人工审查首页及 `/tools/` 时重点看中英文、320px 导航、Tab 焦点、Footer 和真实空态；404 的「工具箱」应进入 `/tools/`，旧 `/#tools` 仍可用。真实移动设备与屏幕阅读器验收仍待维护者完成。
+
+## V0.4-A：新增真实工具前
+
+完整边界见 [Tool Platform & Image Foundation](docs/tool-platform-image-foundation.md)。先为真实需求确认 Taxonomy 的领域/方向与有依据的身份/场景标签，在 Registry 中以 draft 开始；添加独立 lazy loader 和各已发布地区的静态 SEO 内容，再完成实际功能与浏览器验证后发布。分类变化不改变 `/tools/<slug>/`。发布构建会拒绝重复 ID/Slug、非法分类关系、地区/标签、缺失 loader 或文案。首页精选 ID 顺序仅决定展示优先级，不能绕过发布门。
+
+正式工具页使用单一 ToolRuntime：导航身份 → Astro 静态 H1/简介插槽 → 工具操作 → Island 外静态指南/相关工具。Lab 保留自己的 H1 和 Canvas 浮层。Quick/Advanced 共用工具自有 Settings；只有当前 sourceRevision/settingsRevision/requestId 的 ready 输出可下载。图片格式转换、尺寸调整、裁剪仍分别留在 B/C/D。
+
+停止 dev 后可额外运行 `node scripts/verify-tool-fixture.mjs cn` 和 `node scripts/verify-tool-fixture.mjs global`：它们只在测试构建期间替换内存模块，输出到仓库外 `../.validation/platform-v04a/<region>/`，复用生产守卫验证非空页面及长文不进客户端 JS；不修改生产 Registry。**这些测试产物不可部署。**
+
+原生图片探测的复现方式、固定样本与限制见 [能力记录](docs/image-processing-capabilities.md)。A 没有安装 WASM 或图片库，没有修改 FileDropzone/ScrollDock；已测 Chromium 结果不能替代 Firefox/WebKit 或真机发布验收。

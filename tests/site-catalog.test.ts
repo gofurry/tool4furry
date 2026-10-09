@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { getCatalogEntries } from '../src/site/catalog';
+import {
+  getCatalogEntries,
+  getHomepageEntries,
+  getCatalogSections,
+  getDiscoverySections,
+  getSwitcherTools,
+} from '../src/site/catalog';
 import type { ToolDefinition } from '../src/tools/types';
+import { fixtureTools } from './fixtures/tools';
+import { assertValidRegistry } from '../src/tools/validate-registry';
 
 // Test-only metadata; never registered as a real tool or given a loader.
 function fixture(
@@ -11,6 +19,7 @@ function fixture(
     id,
     slug: id,
     category: 'images',
+    group: 'image-processing',
     mode: 'canvas',
     status: 'published',
     regions: ['cn', 'global'],
@@ -45,6 +54,11 @@ describe('static tool discovery', () => {
         title: region === 'cn' ? 'both 中文' : 'both English',
         description: region === 'cn' ? '中文说明' : 'English description',
         category: region === 'cn' ? '图像与素材' : 'Images & Assets',
+        categoryId: 'images',
+        groupId: 'image-processing',
+        group: region === 'cn' ? '图片处理' : 'Image Processing',
+        audiences: [],
+        contexts: [],
       });
       expect(registry.map((tool) => tool.status)).toEqual([
         'published',
@@ -64,24 +78,78 @@ describe('static tool discovery', () => {
     ).toEqual([]);
   });
 
-  it('omits unknown categories safely, including inherited property names', () => {
+  it('rejects unknown categories before publication, including inherited property names', () => {
     for (const category of ['new-category', 'constructor', '__proto__']) {
-      expect(
-        getCatalogEntries('cn', [fixture('new', { category })])[0],
-      ).toMatchObject({
-        href: '/tools/new/',
-        category: undefined,
-      });
+      expect(() =>
+        assertValidRegistry(
+          [
+            fixture('new', {
+              category: category as ToolDefinition['category'],
+            }),
+          ],
+          { new: () => null },
+        ),
+      ).toThrow('unknown category');
     }
   });
 
   it('uses topic categories independently of workbench modes', () => {
     const registry = [
-      fixture('canvas-text', { category: 'text', mode: 'canvas' }),
-      fixture('form-files', { category: 'files', mode: 'form' }),
+      fixture('canvas-images', { category: 'images', mode: 'canvas' }),
+      fixture('form-images', { category: 'images', mode: 'form' }),
     ];
     expect(
       getCatalogEntries('global', registry).map((card) => card.category),
-    ).toEqual(['Text & Writing', 'Files & Productivity']);
+    ).toEqual(['Images & Assets', 'Images & Assets']);
+  });
+
+  it.each([0, 3, 20, 100])(
+    'projects %i tools without losing full catalog coverage or inflating menus',
+    (count) => {
+      const list = fixtureTools(count);
+      const entries = getCatalogEntries('cn', list);
+      const sections = getCatalogSections('cn', list);
+      expect(
+        sections.flatMap((section) =>
+          section.groups.flatMap((group) => group.entries),
+        ),
+      ).toEqual(entries);
+      expect(getHomepageEntries('cn', list)).toHaveLength(Math.min(9, count));
+      expect(getSwitcherTools(list)).toHaveLength(Math.min(6, count));
+      for (const discovery of getDiscoverySections('cn', list)) {
+        expect(new Set(discovery.entries.map((entry) => entry.id)).size).toBe(
+          count,
+        );
+        expect(discovery.entries.map((entry) => entry.href)).toEqual(
+          entries.map((entry) => entry.href),
+        );
+      }
+      if (!count) expect(getDiscoverySections('cn', list)).toEqual([]);
+    },
+  );
+  it('filters editorial IDs, deduplicates and fills in stable registry order', () => {
+    const list = [
+      fixture('draft', { status: 'draft' }),
+      fixture('global', { regions: ['global'] }),
+      ...fixtureTools(20),
+    ];
+    expect(
+      getHomepageEntries('cn', list, [
+        'missing',
+        'draft',
+        'global',
+        'fixture-12',
+        'fixture-12',
+      ]).map((entry) => entry.id),
+    ).toEqual([
+      'fixture-12',
+      ...Array.from({ length: 8 }, (_, i) => `fixture-${i + 1}`),
+    ]);
+    expect(getCatalogSections('cn', list).map((section) => section.id)).toEqual(
+      ['images'],
+    );
+    expect(
+      getDiscoverySections('cn', list).map((section) => section.id),
+    ).toEqual(['audience-creator', 'audience-developer', 'context-studio']);
   });
 });

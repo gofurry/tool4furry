@@ -4,9 +4,11 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import { siteStyles as s } from '../styles/site';
 import { region } from '../config/site';
 import { messages } from '../i18n/messages';
-import { getCatalogEntries } from '../site/catalog';
+import { getHomepageEntries } from '../site/catalog';
+import ToolCards from '../components/site/ToolCards.astro';
+import CatalogEmpty from '../components/site/CatalogEmpty.astro';
 const t = messages[region];
-const tools = getCatalogEntries(region);
+const tools = getHomepageEntries(region);
 ---
 <SiteLayout title={t.home} fullTitle={t.homeTitle} description={t.homeDescription}>
   <main id="main-content" {...stylex.attrs(s.width, s.homeMain)}>
@@ -24,32 +26,8 @@ const tools = getCatalogEntries(region);
     </section>
     <section id="tools" aria-labelledby="tools-heading" {...stylex.attrs(s.section)}>
       <h2 id="tools-heading" {...stylex.attrs(s.sectionHeading)}>{t.explore}</h2>
-      {tools.length === 0 ? <div data-catalog-empty {...stylex.attrs(s.empty)}>
-        <svg {...stylex.attrs(s.emptyArt)} width="80" height="80" viewBox="0 0 80 80" fill="none" aria-hidden="true">
-          <rect x="13" y="16" width="44" height="52" rx="6" transform="rotate(-12 13 16)" fill="#FFFEFB" stroke="#DDD9D1" />
-          <rect x="27" y="22" width="40" height="48" rx="6" fill="#FFFEFB" stroke="#DDD9D1" />
-          <path d="M36 36h20M36 44h12" stroke="#DDD9D1" stroke-width="2" stroke-linecap="round" />
-          <path d="m59 7 3 7 7 3-7 3-3 7-3-7-7-3 7-3Z" fill="#C97849" />
-        </svg>
-        <div>
-          <h3 {...stylex.attrs(s.emptyTitle)}>{t.empty}</h3>
-          <p {...stylex.attrs(s.description)}>{t.emptyDetail}</p>
-          <a href="https://github.com/gofurry/tool4furry" {...stylex.attrs(s.link, s.development)}>{t.development}<span aria-hidden="true">↗</span></a>
-        </div>
-      </div> : <ul {...stylex.attrs(s.cards)}>{tools.map(tool => <li>
-        <a href={tool.href} data-tool-card={tool.id} {...stylex.attrs(s.card)}>
-          <span {...stylex.attrs(s.cardTop)}>
-            <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true" {...stylex.attrs(s.cardIcon)}>
-              <rect x="12" y="16" width="20" height="16" rx="3" stroke="currentColor" stroke-width="1.5" />
-              <path d="M17 16v-3a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M12 23h20M22 21v4" stroke="currentColor" stroke-width="1.5" />
-            </svg>
-            <span aria-hidden="true">↗</span>
-          </span>
-          <h3 {...stylex.attrs(s.cardTitle)}>{tool.title}</h3>
-          <p {...stylex.attrs(s.cardDescription)}>{tool.description}</p>
-          {tool.category && <span {...stylex.attrs(s.category)}>{tool.category}</span>}
-        </a>
-      </li>)}</ul>}
+      {tools.length === 0 ? <CatalogEmpty region={region} /> : <ToolCards entries={tools} />}
+      <a href="/tools/" {...stylex.attrs(s.link, s.development)}>{t.browseAll}<span aria-hidden="true">↗</span></a>
     </section>
   </main>
 </SiteLayout>

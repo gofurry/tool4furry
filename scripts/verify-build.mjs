@@ -5,11 +5,27 @@ import { JSDOM } from 'jsdom';
 
 const region = process.argv[2];
 assert(['cn', 'global'].includes(region), 'Specify cn or global');
-const root = resolve('dist', region);
+const root = process.argv[3]
+  ? resolve(process.argv[3])
+  : resolve('dist', region);
+const fixtureMode = process.argv[4] === '--fixture';
+if (fixtureMode)
+  assert.equal(
+    root,
+    resolve('../.validation/platform-v04a', region),
+    'Fixture guards require the isolated output directory',
+  );
 const files = (await readdir(root, { recursive: true })).map((file) =>
   file.replaceAll('\\', '/'),
 );
 const htmlFiles = files.filter((file) => file.endsWith('.html'));
+if (!fixtureMode)
+  assert(
+    !files.some((file) =>
+      /FixtureTool|(^|\/)(fixtures|spikes)(\/|$)/.test(file),
+    ),
+    'Test-only assets leaked into production',
+  );
 assert(
   !files.some((file) => /(^|\/)lab(\/|$)/i.test(file)),
   'Lab paths leaked into production',
@@ -94,7 +110,7 @@ const mark = '/brand/tool4furry-mark.svg';
 for (const tag of ['header', 'footer']) {
   const shell = document.querySelector(tag);
   assert(
-    shell?.querySelector('a[href="/#tools"]'),
+    shell?.querySelector('a[href="/tools/"]'),
     `${tag}: missing cross-page toolbox link`,
   );
   assert(
@@ -177,69 +193,236 @@ if (region === 'global')
     !/[\u4e00-\u9fff]/u.test(document.body.textContent),
     'Chinese copy in global homepage',
   );
-const toolLinks = new Set(
-  [...document.querySelectorAll('a[href^="/tools/"]')].map((link) =>
-    link.getAttribute('href'),
-  ),
+const fullHTML = await readFile(resolve(root, 'tools/index.html'), 'utf8');
+const fullCatalog = new JSDOM(fullHTML).window.document;
+assert.equal(
+  fullCatalog.title,
+  region === 'cn' ? '工具箱 — Tool4Furry' : 'Toolbox — Tool4Furry',
 );
-if (toolLinks.size === 0)
+assert.equal(fullCatalog.querySelectorAll('h1').length, 1);
+assert.equal(
+  fullCatalog.querySelector('link[rel="canonical"]')?.getAttribute('href'),
+  `${site}tools/`,
+);
+assert.equal(
+  fullCatalog.querySelectorAll(
+    'script, astro-island, link[rel="modulepreload"], link[as="script"]',
+  ).length,
+  0,
+  'Full catalog must remain static',
+);
+assert(!fullHTML.includes('/lab/'), 'Lab links leaked into full catalog');
+if (region === 'global')
   assert(
-    home.includes(region === 'cn' ? '工具正在准备中' : 'Tools are on the way'),
-    'Wrong empty state copy',
+    !/[\u4e00-\u9fff]/u.test(fullCatalog.body.textContent),
+    'Chinese copy in global catalog',
   );
-assert.equal(
-  catalog.querySelectorAll('[data-catalog-empty]').length,
-  toolLinks.size === 0 ? 1 : 0,
-);
-assert.equal(
-  document.querySelectorAll('a[href="#tools"]').length,
-  toolLinks.size === 0 ? 0 : 1,
-  'Only published tools may enable the hero CTA',
-);
 const cards = [...catalog.querySelectorAll('ul > li > a[data-tool-card]')];
-assert.equal(
-  cards.length,
-  toolLinks.size,
-  'Every tool link must be a whole catalog card',
+const allCards = [
+  ...fullCatalog.querySelectorAll('ul > li > a[data-tool-card]'),
+];
+const toolLinks = new Set(allCards.map((card) => card.getAttribute('href')));
+const toolPages = htmlFiles.filter((file) =>
+  /^tools\/[^/]+\/index\.html$/.test(file),
 );
+assert(cards.length <= 9, 'Homepage must curate at most nine tools');
+assert.equal(allCards.length, toolLinks.size, 'Duplicate full catalog URLs');
 assert.equal(
-  new Set(cards.map((card) => card.dataset.toolCard)).size,
-  cards.length,
-  'Duplicate catalog tool IDs',
+  allCards.length,
+  toolPages.length,
+  'Full catalog must cover all real tool pages',
 );
-for (const card of cards) {
-  const href = card.getAttribute('href');
-  assert(
-    /^\/tools\/[a-z0-9-]+\/$/.test(href),
-    `Invalid real tool route: ${href}`,
-  );
-  assert(
-    htmlFiles.includes(`${href.slice(1)}index.html`),
-    `Catalog link has no generated tool page: ${href}`,
-  );
-  assert(card.querySelector('h3')?.textContent.trim(), 'Missing tool title');
-  assert(
-    card.querySelector('p')?.textContent.trim(),
-    'Missing tool description',
+for (const [dom, list] of [
+  [document, cards],
+  [fullCatalog, allCards],
+]) {
+  assert.equal(
+    new Set(list.map((card) => card.dataset.toolCard)).size,
+    list.length,
+    'Duplicate catalog tool IDs',
   );
   assert.equal(
-    card.querySelectorAll('a, button, input').length,
-    0,
-    'No nested interactive card controls',
+    dom.querySelectorAll('[data-catalog-empty]').length,
+    allCards.length === 0 ? 1 : 0,
+  );
+  if (!allCards.length) {
+    assert(
+      dom.body.textContent.includes(
+        region === 'cn' ? '工具正在准备中' : 'Tools are on the way',
+      ),
+      'Wrong empty state copy',
+    );
+    assert.equal(
+      dom.querySelectorAll(
+        '[id^="domain-"], [id^="audience-"], [id^="context-"], input[type="search"]',
+      ).length,
+      0,
+      'No empty discovery trees or search',
+    );
+  }
+  for (const card of list) {
+    const href = card.getAttribute('href');
+    assert(
+      /^\/tools\/[a-z0-9-]+\/$/.test(href),
+      `Invalid real tool route: ${href}`,
+    );
+    assert(
+      htmlFiles.includes(`${href.slice(1)}index.html`),
+      `Catalog link has no generated page: ${href}`,
+    );
+    assert(
+      card.querySelector('h3, h4')?.textContent.trim(),
+      'Missing tool title',
+    );
+    assert(
+      card.querySelector('p')?.textContent.trim(),
+      'Missing tool description',
+    );
+    assert.equal(
+      card.querySelectorAll('a, button, input').length,
+      0,
+      'No nested interactive card controls',
+    );
+  }
+}
+assert.equal(
+  document.querySelectorAll('a[href="#tools"]').length,
+  allCards.length ? 1 : 0,
+  'Only published tools enable the hero CTA',
+);
+for (const card of cards) {
+  const full = allCards.find(
+    (entry) => entry.dataset.toolCard === card.dataset.toolCard,
+  );
+  assert.equal(
+    full?.getAttribute('href'),
+    card.getAttribute('href'),
+    'Featured card must exist in the regional full catalog',
   );
 }
-for (const page of htmlFiles.filter((file) => file.startsWith('tools/'))) {
+for (const page of toolPages)
   assert(
     toolLinks.has('/' + page.replace(/index\.html$/, '')),
     `Unlisted tool page: ${page}`,
+  );
+for (const link of fullCatalog.querySelectorAll('a[href^="/tools/"]')) {
+  const href = link.getAttribute('href');
+  assert(
+    href === '/tools/' || toolLinks.has(href),
+    `Invalid discovery link: ${href}`,
   );
 }
 const fontAssets = new Set();
 const inlineFonts = new Set();
 for (const page of htmlFiles) {
   const content = await readFile(resolve(root, page), 'utf8');
+  if (!fixtureMode)
+    assert(
+      !/STATIC_GUIDE_ONLY_|data-fixture-counter/.test(content),
+      `Test content leaked: ${page}`,
+    );
   assert(!content.includes('virtual:stylex'), `Dev StyleX runtime in ${page}`);
   const dom = new JSDOM(content).window.document;
+  if (toolPages.includes(page)) {
+    const main = dom.querySelector('main[data-tool-id]');
+    const href = '/' + page.replace(/index\.html$/, '');
+    const card = allCards.find((entry) => entry.getAttribute('href') === href);
+    assert.equal(
+      main?.getAttribute('data-tool-id'),
+      card?.dataset.toolCard,
+      `Tool identity mismatch: ${page}`,
+    );
+    assert.equal(main?.getAttribute('data-tool-region'), region);
+    assert.equal(
+      dom.querySelectorAll('h1').length,
+      1,
+      `Exactly one static tool H1: ${page}`,
+    );
+    assert.equal(
+      dom.querySelectorAll('astro-island').length,
+      1,
+      `Exactly one tool React root: ${page}`,
+    );
+    assert(
+      dom.querySelector('astro-island[component-url*="ToolRuntime"]'),
+      `Wrong fixed root: ${page}`,
+    );
+    assert.equal(
+      dom.querySelectorAll('[data-tool-page-entry]').length,
+      1,
+      'One product navigation owner',
+    );
+    assert.equal(
+      dom.querySelectorAll('[data-tool-page-entry] h1').length,
+      0,
+      'Navigation identity is not the SEO H1',
+    );
+    const intro = dom.querySelector('[data-tool-intro]');
+    const runtime = dom.querySelector('[data-tool-runtime]');
+    const guide = dom.querySelector('[data-tool-guide]');
+    assert(
+      intro?.querySelector('h1')?.textContent.trim() &&
+        intro.querySelector('p')?.textContent.trim(),
+      `Missing static intro: ${page}`,
+    );
+    assert(
+      runtime &&
+        guide &&
+        intro.compareDocumentPosition(runtime) & 4 &&
+        runtime.compareDocumentPosition(guide) & 4,
+      'Intro → runtime → static guide order',
+    );
+    assert.equal(
+      (dom.title.match(/Tool4Furry/g) ?? []).length,
+      1,
+      'Single brand in tool title',
+    );
+    assert.equal(
+      dom.querySelectorAll('meta[name="robots"], link[hreflang]').length,
+      0,
+      'No unpublished/noindex/alternate tool routes',
+    );
+    for (const link of dom.querySelectorAll('[data-related-tools] a'))
+      assert(
+        toolLinks.has(link.getAttribute('href')) &&
+          link.getAttribute('href') !== href,
+        'Related links must be distinct regional published tools',
+      );
+  }
+  assert.equal(dom.documentElement.lang, region === 'cn' ? 'zh-CN' : 'en');
+  if (page !== '404.html') {
+    const canonical = site + page.replace(/index\.html$/, '');
+    assert.equal(
+      dom.querySelector('link[rel="canonical"]')?.getAttribute('href'),
+      canonical,
+    );
+    assert(
+      dom.querySelector('meta[name="description"]')?.content.trim(),
+      `Missing description: ${page}`,
+    );
+    assert.equal(
+      dom.querySelector('meta[property="og:title"]')?.content,
+      dom.title,
+    );
+    assert.equal(
+      dom.querySelector('meta[property="og:description"]')?.content,
+      dom.querySelector('meta[name="description"]')?.content,
+    );
+    assert.equal(
+      dom.querySelector('meta[property="og:url"]')?.content,
+      canonical,
+    );
+    assert.equal(
+      dom.querySelector('meta[property="og:type"]')?.content,
+      'website',
+    );
+  }
+  if (page === 'tools/index.html')
+    for (const tag of ['header', 'footer'])
+      assert(
+        dom.querySelector(`${tag} a[href="/tools/"]`),
+        `Missing full catalog navigation: ${tag}`,
+      );
   assert.equal(
     dom.querySelector('link[rel="icon"]')?.getAttribute('href'),
     mark,
@@ -257,8 +440,8 @@ for (const page of htmlFiles) {
       'Preserve the default title API',
     );
     assert(
-      dom.querySelector('header a[href="/#tools"]'),
-      '404 toolbox navigation must return to the home catalog',
+      dom.querySelector('header a[href="/tools/"]'),
+      '404 toolbox navigation must reach the full catalog',
     );
   }
   const stylesheets = [...dom.querySelectorAll('link[rel="stylesheet"]')];
@@ -352,10 +535,25 @@ for (const font of ['dm-sans', 'noto-sans-sc']) {
 for (const file of files.filter((file) => file.endsWith('.js'))) {
   const js = await readFile(resolve(root, file), 'utf8');
   assert(
-    !/data-workbench|data-ui-lab|data-files-lab|simulateText|advanceTasks|canvasAction|DEV ONLY/.test(
+    !js.includes('STATIC_GUIDE_ONLY_'),
+    'Astro-only long content leaked into client JS',
+  );
+  if (!fixtureMode)
+    assert(
+      !/data-fixture-counter|publicationFixtures|image\/x-tool4furry-unsupported/.test(
+        js,
+      ),
+      `Test implementation leaked: ${file}`,
+    );
+  assert(
+    !/data-ui-lab|data-files-lab|simulateText|advanceTasks|canvasAction|DEV ONLY/.test(
       js,
     ),
     `Demo implementation leaked: ${file}`,
+  );
+  assert(
+    toolPages.length > 0 || !js.includes('data-workbench'),
+    `Unused workbench leaked without published tools: ${file}`,
   );
 }
 assert((await stat(root)).isDirectory());

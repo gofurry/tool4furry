@@ -13,7 +13,8 @@ const fixture = (
 ): ToolDefinition => ({
   id,
   slug: id,
-  category: 'test',
+  category: 'images',
+  group: 'image-processing',
   mode: 'custom',
   status,
   regions,

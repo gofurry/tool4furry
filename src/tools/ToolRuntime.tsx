@@ -22,9 +22,11 @@ class LoadBoundary extends Component<
 export default function ToolRuntime({
   toolId,
   region,
+  intro,
 }: {
   toolId: string;
   region: Region;
+  intro?: ReactNode;
 }) {
   const t = messages[region];
   const definition = getPublishedTools(region).find(
@@ -36,7 +38,7 @@ export default function ToolRuntime({
   }, [toolId]);
   const statusStyle = stylex.props(
     s.status,
-    definition?.mode === 'canvas' && s.canvasStatus,
+    definition?.mode === 'canvas' && !intro && s.canvasStatus,
   );
   const fallback = (
     <p role="alert" {...statusStyle}>
@@ -50,18 +52,21 @@ export default function ToolRuntime({
         mode={definition?.mode ?? 'custom'}
         title={definition?.copy[region].title ?? t.unavailable}
         currentToolId={definition?.id}
+        intro={intro}
       >
-        <LoadBoundary key={toolId} fallback={fallback}>
-          <Suspense
-            fallback={
-              <p role="status" {...statusStyle}>
-                {t.loading}
-              </p>
-            }
-          >
-            {definition && Tool ? <Tool region={region} /> : fallback}
-          </Suspense>
-        </LoadBoundary>
+        <div data-tool-runtime={toolId}>
+          <LoadBoundary key={toolId} fallback={fallback}>
+            <Suspense
+              fallback={
+                <p role="status" {...statusStyle}>
+                  {t.loading}
+                </p>
+              }
+            >
+              {definition && Tool ? <Tool region={region} /> : fallback}
+            </Suspense>
+          </LoadBoundary>
+        </div>
       </ToolPageFrame>
     </UiProvider>
   );
