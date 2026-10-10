@@ -6,7 +6,9 @@
 
 **draft，未公开发布。** 开发运行 `pnpm install && pnpm dev` 后访问 `http://127.0.0.1:54321/preview/image-converter/`。英文：`pnpm exec cross-env SITE_REGION=global pnpm dev`。正式目标是 `/tools/image-converter/`，目前两个地区的正式构建均不生成此路由，不在首页、目录或切换器中展示草稿。
 
-这是可真实处理图片的工具预览，不是 Lab 的模拟算法。Firefox、Safari/WebKit、iOS/Android 真机与可发布资源阈值尚未验收，不能只为生成正式 URL 就修改 published。五个既有 `/lab/*` 保留原职责。
+这是可真实处理图片的工具预览，不是 Lab 的模拟算法。按 2026-10-10 的 [L1/L2/L3 发布政策](../AGENTS.md#mvp-beta-release-policy-2026-10-10)，Firefox、Safari/WebKit、iOS/Android 真机及全设备资源上限的验证缺口不再自动阻断 Beta，转为后续兼容性待办，仍须如实披露。当前保持 draft，等待视觉打磨及维护者按 L2 最终确认，再单独决定是否提升 published。五个既有 `/lab/*` 保留原职责。
+
+新政策取代旧合同中冲突的强制跨浏览器发布要求；以下 B0–B5 历史实测记录不变，不因政策调整补记任何测试通过。日常修改按 L1 定向验证，完整 CI 优先由 GitHub Actions 执行。
 
 ## B0 — 基线及接口增量
 
@@ -109,7 +111,7 @@ CN 和 Global 均检查：1440×900、1024×768、901×600、900×600、768×102
 4. 连续处理并移除，展开 DEV diagnostics 检查位图/Canvas/URL 释放；离开页面不能留下工具-owned URL。
 5. 停止 Astro dev 后，`node scripts/serve-converter-probe.mjs` → `http://127.0.0.1:4388/scripts/spikes/converter-core.html`，点击真实 codec 检查。可用 Pillow 再生成 `--large` 样本，外部照片须按上方来源自行准备，运行可选大样本。probe 无生产路由。
 
-Firefox、Safari/WebKit、iOS Safari、Android Chrome、真实触摸/软键盘/安全区/下载体验、屏幕阅读器、reduced-motion 系统设置、设备峰值内存/持续温升、ICC/广色域照片主观质量仍待人工验证。没有引入新的运动效果；继续复用既有 reduced-motion 样式。输入/输出格式必须逐环境实测，不自动引入 WASM。B 的未通过发布项也必须在 C/D 复用图片核心前复核。
+Firefox、Safari/WebKit、iOS Safari、Android Chrome、真实触摸/软键盘/安全区/下载体验、屏幕阅读器、reduced-motion 系统设置、设备峰值内存/持续温升、ICC/广色域照片主观质量仍待人工验证，按 L3 根据反馈和需求推进，不再要求全部先于 Beta 或 C/D 复用完成。没有引入新的运动效果；继续复用既有 reduced-motion 样式。各环境兼容性声明必须有对应实测依据，不自动引入 WASM；已知数据损坏、严重崩溃或其他阻断问题仍须在 L2 前解决。
 
 ## B5 — 最终验证
 

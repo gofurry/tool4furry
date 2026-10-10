@@ -1,6 +1,6 @@
 # Tool4Furry
 
-V0.4-B: a real Image Converter draft, with no published tools yet. Read [docs/image-converter-implementation.md](docs/image-converter-implementation.md) for ownership, verification and release blockers. The user-supplied full contract is an attachment, not a required repository file.
+V0.4-B: a real Image Converter draft, with no published tools yet. Read [docs/image-converter-implementation.md](docs/image-converter-implementation.md) for ownership, Beta acceptance and compatibility follow-ups. The user-supplied full contract is an attachment, not a required repository file.
 
 - Read [docs/foundation.md](docs/foundation.md) for boundaries and verified integration decisions.
 - `src/pages` + `src/layouts`: Astro SSG, site copy and published routes.
@@ -8,7 +8,7 @@ V0.4-B: a real Image Converter draft, with no published tools yet. Read [docs/im
 - Read [docs/tool-platform-image-foundation.md](docs/tool-platform-image-foundation.md) for V0.4-A. Taxonomy is owned by `src/site/taxonomy.ts`; Registry remains the publication gate. Homepage has <=9 curated tools, `/tools/` covers all, Switcher has <=6 shortcuts plus the full catalog. Header/Footer/404 toolbox links now use `/tools/`; keep the historical home `#tools` anchor.
 - Published metadata must pass `assertValidRegistry` and have regional Astro-only content in `src/site/tool-content.ts`. ToolRuntime accepts a static intro slot: formal pages have one Astro H1; Lab keeps its heading and Canvas overlay behavior. Never import long tool content into React.
 - `processing-state.ts` is a pure per-tool version contract, not a scheduler/store. Callers own settings validation, equality, real output verification and disposal of rejected/obsolete resources. Converter owns a bounded serial lane and two-phase candidate selection; naming/mode changes never re-encode. Resizer/Cropper remain out of scope.
-- Capability evidence and remaining browser/device release gates: [docs/image-processing-capabilities.md](docs/image-processing-capabilities.md). `scripts/spikes` and `tests/fixtures` are never production resources; isolated fixture builds go outside the repository dist.
+- Capability evidence, Beta policy and compatibility backlog: [docs/image-processing-capabilities.md](docs/image-processing-capabilities.md). `scripts/spikes` and `tests/fixtures` are never production resources; isolated fixture builds go outside the repository dist.
 - Site header/footer and ToolPageFrame share `public/brand/tool4furry-mark.svg`; it is a replaceable geometric placeholder and the SVG favicon. Static decorative artwork stays local. `SiteLayout.fullTitle` overrides the default brand suffix only when supplied.
 - `src/workbench`: optional slots, responsive layout and panel visibility only.
 - Read [docs/workbench-appearance.md](docs/workbench-appearance.md) for the V0.3-B contract and verification. `ToolPageFrame` owns product entry/identity; Shell header is tool-local. Registry stays metadata-only; draft metadata must not enter published discovery.
@@ -18,7 +18,7 @@ V0.4-B: a real Image Converter draft, with no published tools yet. Read [docs/im
 - ScrollDock is opt-in document scrolling, currently only in FilesLab. Never mount it globally or control Canvas/internal panels. Preserve native scrolling.
 - `src/tools/registry.ts`: metadata only; `loaders.ts`: separate lazy implementations.
 - `src/lab`: development demos; never register them as published tools.
-- `/preview/[slug]` is a separate DEV-only real-tool preview (one fixed ToolRuntime root). The draft Converter loader uses a direct `import.meta.env.DEV` guard so its implementation is absent from production. Do not promote it or remove that guard without completing browser/device/resource release gates.
+- `/preview/[slug]` is a separate DEV-only real-tool preview (one fixed ToolRuntime root). The draft Converter loader uses a direct `import.meta.env.DEV` guard so its implementation is absent from production. Keep it draft pending visual polish and maintainer acceptance; promotion and removal of the guard require a separate authorized change after L2 acceptance.
 - `src/config/region.ts`: region/domain contract; `src/i18n/messages.ts`: CN/English copy.
 - Preserve LICENSE. Work on dev; do not merge main or deploy without a request.
 - Use StyleX, with global CSS limited to reset and HTML basics. No old React Babel configuration.
@@ -26,6 +26,23 @@ V0.4-B: a real Image Converter draft, with no published tools yet. Read [docs/im
 - No backend, database, SSR adapter, global business store, universal canvas engine or monorepo.
 - Keep tool state outside WorkbenchShell; panel visibility and resizing must preserve it.
 - Hydrate only directly imported fixed React roots in Astro.
-- Verify sequentially: `pnpm check`, `pnpm test`, `pnpm build:cn`, `pnpm build:global`.
+- Choose local verification by L1 below; leave full CI primarily to existing GitHub Actions. When a full local run is warranted, use `pnpm check`, `pnpm test`, `pnpm build:cn`, `pnpm build:global` sequentially.
 - Stop the dev server before production builds: Vite shares its dependency cache.
 - See README for browser acceptance paths. Do not claim real-device testing from jsdom.
+
+## MVP Beta release policy (2026-10-10)
+
+This policy supersedes conflicting mandatory cross-browser/device/resource-matrix release requirements in V0.4-A/B documents. Preserve historical evidence, safety checks, format verification and necessary automated tests. A policy update does not authorize publication.
+
+- **L1 — Daily development:** UI/copy/style changes need relevant behavior and necessary viewports only; controls/state changes need related tests; image-core changes need the affected formats, failures and actual outputs verified. Documentation-only changes need text consistency, diff review and `git diff --check`. Do not repeat all browsers, all Lab regressions, the full test suite or both regional builds for every small change; full CI primarily runs in existing GitHub Actions.
+- **L2 — MVP Beta:** all seven requirements must hold:
+
+  1. Existing GitHub Actions CI passes.
+  2. At least one real Chromium browser completes import, conversion, preview and download.
+  3. Actual output format, MIME, file contents and downloaded result are correct.
+  4. Desktop and common phone viewport layouts are usable without blocking interactions.
+  5. Runtime capability detection safely disables unsupported encoders or reports an explicit error.
+  6. No known data corruption, severe crashes or other blocking issues remain.
+  7. The maintainer makes the final decision to enter Beta.
+
+- **L3 — Compatibility follow-up:** after Beta, target Firefox, Safari/WebKit, real iOS/Android devices and performance testing according to feedback and need. A full browser/device matrix or universal resource-limit validation is not a Beta prerequisite. Record untested platforms and resource-limit uncertainty honestly; never claim universal compatibility. Known blocking defects still block L2.

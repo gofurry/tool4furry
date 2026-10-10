@@ -1,6 +1,6 @@
 # Tool4Furry
 
-为 Furry 创作者准备的开源浏览器工具站。当前为 **V0.4-B — Image Converter**：首款真实单图 PNG/JPEG/WebP 转换器已提供开发预览，仍为 **draft**。Firefox、Safari/WebKit 与真实手机发布门禁尚未完成，因此正式目录仍为空。既有品牌首页、Creative Studio 控件与 Workbench 保持不变。
+为 Furry 创作者准备的开源浏览器工具站。当前为 **V0.4-B — Image Converter**：首款真实单图 PNG/JPEG/WebP 转换器已提供开发预览，仍为 **draft**，待视觉打磨和维护者最终验收后另行决定是否进入 Beta，正式目录仍为空。采用 [L1/L2/L3 发布政策](AGENTS.md#mvp-beta-release-policy-2026-10-10)：全面跨浏览器/真机验证不再是 Beta 前置条件，未测平台如实记录。既有品牌首页、Creative Studio 控件与 Workbench 保持不变。
 
 前端及未来浏览器本地工具使用现有 [BSD-3-Clause](LICENSE) 协议。当前没有后端；未来 SaaS 后端将放在独立仓库。
 
@@ -35,7 +35,7 @@ pnpm dev
 
 ## 检查与构建
 
-先用 Ctrl+C 停止 dev（也可用 `pnpm exec astro dev stop`），再顺序执行：
+日常按 L1 只做与改动相关的验证，完整 CI 优先由现有 GitHub Actions 执行，无需每次小修改都重跑全量。确需本地完整验证时，先用 Ctrl+C 停止 dev（也可用 `pnpm exec astro dev stop`），再顺序执行：
 
 ```powershell
 pnpm install --frozen-lockfile
@@ -126,4 +126,4 @@ GitHub Actions 对 dev/main 的 push 与 PR 执行安装、检查、测试及双
 
 停止 dev 后可额外运行 `node scripts/verify-tool-fixture.mjs cn` 和 `node scripts/verify-tool-fixture.mjs global`：它们只在测试构建期间替换内存模块，输出到仓库外 `../.validation/platform-v04a/<region>/`，复用生产守卫验证非空页面及长文不进客户端 JS；不修改生产 Registry。**这些测试产物不可部署。**
 
-原生图片探测的复现方式、固定样本与限制见 [能力记录](docs/image-processing-capabilities.md)。A 没有安装 WASM 或图片库，没有修改 FileDropzone/ScrollDock；已测 Chromium 结果不能替代 Firefox/WebKit 或真机发布验收。
+原生图片探测的复现方式、固定样本与限制见 [能力记录](docs/image-processing-capabilities.md)。A 没有安装 WASM 或图片库，没有修改 FileDropzone/ScrollDock；已测 Chromium 结果不能作为 Firefox/WebKit 或真机兼容性声明，相关验证按 L3 推进，不自动阻断 Beta。

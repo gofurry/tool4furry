@@ -1,5 +1,13 @@
 # Image processing capability evidence — V0.4-A
 
+## 当前 MVP Beta 政策（2026-10-10）
+
+按 [AGENTS.md 的 L1/L2/L3 政策](../AGENTS.md#mvp-beta-release-policy-2026-10-10) 验收：日常按改动风险定向验证，完整 CI 优先交给 GitHub Actions；Beta 必须满足 CI、真实 Chromium 完整流程、输出真实性、桌面/常见手机视口、能力检测安全失败、无已知阻断问题及维护者最终确认。
+
+Firefox、Safari/WebKit、iOS/Android 真机全面验证及全设备资源上限验证不再是 Beta 强制前置条件，转为 L3 按反馈推进的兼容性待办；未测平台和阈值局限仍须准确披露，安全与格式检查不变。Image Converter 仍为 draft，待视觉打磨及维护者验收后另行决定是否发布。
+
+以下 A/B 实测数据与原门禁表保留为历史记录；其中冲突的强制跨浏览器发布要求由新政策取代，不代表新增测试已通过。
+
 A 阶段的结论是：**已测 Windows 内置 Chromium 可原生完成本次 PNG/JPEG/WebP 编码；不据此承诺其他浏览器，也不引入 WASM fallback。** 这不是三款工具的发布验收。
 
 ## 可复现的探测
@@ -29,7 +37,7 @@ PNG/WebP 的半透明蓝色像素均为 [0,0,255,128]；JPEG 白底合成后为 
 - 本次创建/关闭 ImageBitmap 均为 8；临时 Canvas 归零。没有使用 Object URL，不能把这项测试说成已验证真实工具的 URL 生命周期。
 - `tests/encoding-verdict.test.ts` 额外验证“请求 WebP、实际 PNG”和“谎报 WebP MIME、字节却是 PNG”均不能通过输出格式判断。文件头只是探测线索，真实完成条件还包括可解码性和预期尺寸。
 
-## 支持矩阵与 B/C/D 发布门禁
+## 历史支持矩阵与原 B/C/D 发布门禁
 
 | 环境/能力 | 状态 | 后续要求 |
 | --- | --- | --- |
