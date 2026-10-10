@@ -4,7 +4,7 @@
 
 ## 当前状态与入口
 
-**draft，未公开发布。** 开发运行 `pnpm install && pnpm dev` 后访问 `/preview/image-converter/`。英文：`pnpm exec cross-env SITE_REGION=global astro dev`。正式目标是 `/tools/image-converter/`，目前两个地区的正式构建均不生成此路由，不在首页、目录或切换器中展示草稿。
+**draft，未公开发布。** 开发运行 `pnpm install && pnpm dev` 后访问 `http://127.0.0.1:54321/preview/image-converter/`。英文：`pnpm exec cross-env SITE_REGION=global pnpm dev`。正式目标是 `/tools/image-converter/`，目前两个地区的正式构建均不生成此路由，不在首页、目录或切换器中展示草稿。
 
 这是可真实处理图片的工具预览，不是 Lab 的模拟算法。Firefox、Safari/WebKit、iOS/Android 真机与可发布资源阈值尚未验收，不能只为生成正式 URL 就修改 published。五个既有 `/lab/*` 保留原职责。
 

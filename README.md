@@ -15,7 +15,7 @@ pnpm install
 pnpm dev
 ```
 
-不需要 `.env`、云账号、数据库或密钥。默认 CN 简体中文，访问终端显示的地址（通常为 `http://localhost:4321`）。
+不需要 `.env`、云账号、数据库或密钥。默认 CN 简体中文，`pnpm dev` 监听 `127.0.0.1:54321`，访问 `http://127.0.0.1:54321/`；如端口被占用，以终端显示的实际地址为准。
 
 | 路径 | 内容 |
 | --- | --- |
@@ -67,7 +67,7 @@ python -m http.server 8081 --directory dist/global
 
 静态服务应支持目录下的 `index.html`；未来部署时由主机设置 `404.html` 的错误页映射。不要使用 SPA 全路由回退来伪造 Lab 页面。
 
-可选英文开发预览：`pnpm exec cross-env SITE_REGION=global astro dev`。无需保存 env 文件。
+可选英文开发预览：`pnpm exec cross-env SITE_REGION=global pnpm dev`，使用同一监听地址和端口。无需保存 env 文件。
 
 ## 目录
 

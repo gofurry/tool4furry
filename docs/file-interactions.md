@@ -50,7 +50,7 @@
 
 ## 人工验收
 
-`pnpm install && pnpm dev` 后访问 `/lab/files`，默认中文；英文先停止 dev，再执行 `pnpm exec cross-env SITE_REGION=global astro dev`。
+`pnpm install && pnpm dev` 后访问 `/lab/files`，默认中文；英文先停止 dev，再执行 `pnpm exec cross-env SITE_REGION=global pnpm dev`。
 
 1. 点击、Tab → Enter/Space 选择小 PNG/JPEG/WebP，检查名称、大小与类型。连续选择同一文件应新增记录。单条移除及确认清空只释放本页引用；取消清空不变。
 2. 混合投递合法文件、TXT、超过 2 MiB 的图片扩展名文件；合法部分进入列表，其余逐条说明原因。一次选择 4 个合法文件只接收 3 个；关闭多选后最多 1 个。切换禁用后不能选择/接收拖放；跨越区域内文字/图标时高亮不应闪烁。
